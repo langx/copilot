@@ -53,85 +53,98 @@ client.once("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on("messageCreate", async (message) => {
-  if (!message.content.startsWith("/fix ") || message.author.bot) return;
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isCommand()) return;
 
-  const userMessage = message.content.slice(5).trim();
-  const chatSession = model.startChat({
-    generationConfig,
-    safetySettings,
-    history: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: "Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n",
-          },
-        ],
-      },
-      {
-        role: "model",
-        parts: [{ text: '{"correction":null,"explanation":null}\n\n' }],
-      },
-      {
-        role: "user",
-        parts: [
-          {
-            text: "Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for todays?",
-          },
-        ],
-      },
-      {
-        role: "model",
-        parts: [
-          {
-            text: '{"correction":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?","explanation":"\\"Todays\\" should be \\"today\\"."}\n\n',
-          },
-        ],
-      },
-      {
-        role: "user",
-        parts: [
-          { text: "That sound nice. I think I will also watch a movie later." },
-        ],
-      },
-      {
-        role: "model",
-        parts: [
-          {
-            text: '{"correction":"That sounds nice. I think I will also watch a movie later.","explanation":"\\"Sound\\" should be \\"sounds\\" to agree with the singular subject \\"That\\"."}\n\n',
-          },
-        ],
-      },
-      {
-        role: "user",
-        parts: [
-          {
-            text: "I'm happy to chat with you. What do you want to talk about it more about?\n",
-          },
-        ],
-      },
-      {
-        role: "model",
-        parts: [
-          {
-            text: '{"correction":"I\'m happy to chat with you. What do you want to talk about?","explanation":"Remove \\"it more about\\" to avoid redundancy. \\"What do you want to talk about?\\" is sufficient."}\n',
-          },
-        ],
-      },
-    ],
-  });
+  const { commandName, options } = interaction;
 
-  const result = await chatSession.sendMessage(userMessage);
+  if (commandName === "fix") {
+    const userMessage = options.getString("message");
+    try {
+      const chatSession = model.startChat({
+        generationConfig,
+        safetySettings,
+        history: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: "Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n",
+              },
+            ],
+          },
+          {
+            role: "model",
+            parts: [{ text: '{"correction":null,"explanation":null}\n\n' }],
+          },
+          {
+            role: "user",
+            parts: [
+              {
+                text: "Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for todays?",
+              },
+            ],
+          },
+          {
+            role: "model",
+            parts: [
+              {
+                text: '{"correction":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?","explanation":"\\"Todays\\" should be \\"today\\"."}\n\n',
+              },
+            ],
+          },
+          {
+            role: "user",
+            parts: [
+              {
+                text: "That sound nice. I think I will also watch a movie later.",
+              },
+            ],
+          },
+          {
+            role: "model",
+            parts: [
+              {
+                text: '{"correction":"That sounds nice. I think I will also watch a movie later.","explanation":"\\"Sound\\" should be \\"sounds\\" to agree with the singular subject \\"That\\"."}\n\n',
+              },
+            ],
+          },
+          {
+            role: "user",
+            parts: [
+              {
+                text: "I'm happy to chat with you. What do you want to talk about it more about?\n",
+              },
+            ],
+          },
+          {
+            role: "model",
+            parts: [
+              {
+                text: '{"correction":"I\'m happy to chat with you. What do you want to talk about?","explanation":"Remove \\"it more about\\" to avoid redundancy. \\"What do you want to talk about?\\" is sufficient."}\n',
+              },
+            ],
+          },
+        ],
+      });
 
-  const response = JSON.parse(result.response.text());
+      const result = await chatSession.sendMessage(userMessage);
 
-  if (response.correction) {
-    message.reply(
-      `Correction: ${response.correction}\nExplanation: ${response.explanation}`
-    );
-  } else {
-    message.reply("No issues found.");
+      const response = JSON.parse(result.response.text());
+
+      if (response.correction) {
+        await interaction.reply(
+          `Correction: ${response.correction}\n_Explanation: ${response.explanation}_`
+        );
+      } else {
+        await interaction.reply("No issues found.");
+      }
+    } catch (error) {
+      console.error("Error handling interaction:", error);
+      await interaction.reply(
+        "Sorry, something went wrong while processing your request."
+      );
+    }
   }
 });
 
