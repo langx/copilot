@@ -1,0 +1,30 @@
+{
+  "name": "@langx/copilot",
+  "version": "0.0.1",
+  "description": "An introduction to LangX Copilot, an AI-powered tool designed to enhance your language learning experience with personalized feedback and privacy-focused features.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/langx/copilot.git"
+  },
+  "keywords": [
+    "copilot",
+    "langx",
+    "language",
+    "learning",
+    "practice"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/langx/copilot/issues"
+  },
+  "homepage": "https://github.com/langx/copilot#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.11.3",
+    "discord.js": "^14.15.2"
+  }
+}
