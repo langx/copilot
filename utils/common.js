@@ -23,7 +23,7 @@ config(); // Load environment variables from .env file
 
 // Get your API key from https://makersuite.google.com/app/apikey
 // Access your API key as an environment variable
-export const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+export const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Converts local file information to a GoogleGenerativeAI.Part object
 export function fileToGenerativePart(path, mimeType) {

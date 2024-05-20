@@ -1,4 +1,4 @@
-name: Run Discord Script
+name: Run Discord Copilot
 
 on:
   push:
@@ -26,4 +26,4 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           GUILD_ID: ${{ secrets.GUILD_ID }}
-        run: npm run discord
+        run: npm run discord &
