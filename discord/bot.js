@@ -137,17 +137,17 @@ client.on("interactionCreate", async (interaction) => {
 
       if (response.correction) {
         await interaction.editReply(
-          `**Your message:** ${userMessage}\n**Correction:** ${response.correction}\n_Explanation:_ ${response.explanation}`
+          `📝 **Your message:** ${userMessage}\n✅ **Correction:** ${response.correction}\nℹ️ _Explanation:_ ${response.explanation}`
         );
       } else {
         await interaction.editReply(
-          `**Your message:** ${userMessage}\nNo issues found.`
+          `📝 **Your message:** ${userMessage}\n✔️ No issues found.`
         );
       }
     } catch (error) {
       console.error("Error handling interaction:", error);
       await interaction.editReply(
-        `**Your message:** ${userMessage}\nSorry, something went wrong while processing your request.`
+        `📝 **Your message:** ${userMessage}\n❌ Sorry, something went wrong while processing your request.`
       );
     }
   }
