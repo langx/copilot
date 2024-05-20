@@ -61,6 +61,9 @@ client.on("interactionCreate", async (interaction) => {
   if (commandName === "fix") {
     const userMessage = options.getString("message");
     try {
+      // Acknowledge the interaction first to avoid timeout
+      await interaction.deferReply();
+
       const chatSession = model.startChat({
         generationConfig,
         safetySettings,
@@ -133,15 +136,15 @@ client.on("interactionCreate", async (interaction) => {
       const response = JSON.parse(result.response.text());
 
       if (response.correction) {
-        await interaction.reply(
+        await interaction.editReply(
           `Correction: ${response.correction}\n_Explanation: ${response.explanation}_`
         );
       } else {
-        await interaction.reply("No issues found.");
+        await interaction.editReply("No issues found.");
       }
     } catch (error) {
       console.error("Error handling interaction:", error);
-      await interaction.reply(
+      await interaction.editReply(
         "Sorry, something went wrong while processing your request."
       );
     }
