@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const clientId = process.env.DISCORD_CLIENT_ID;
-const guildId = process.env.DISCORD_GUILD_ID;
 const token = process.env.DISCORD_BOT_TOKEN;
 
 const commands = [
@@ -16,7 +15,7 @@ const commands = [
       {
         name: "message",
         type: 3, // String type
-        description: "The grammer to fix",
+        description: "The grammar to fix",
         required: true,
       },
     ],
@@ -29,9 +28,7 @@ const rest = new REST({ version: "9" }).setToken(token);
   try {
     console.log("Started refreshing application (/) commands.");
 
-    await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-      body: commands,
-    });
+    await rest.put(Routes.applicationCommands(clientId), { body: commands });
 
     console.log("Successfully reloaded application (/) commands.");
   } catch (error) {
