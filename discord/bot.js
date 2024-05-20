@@ -14,7 +14,7 @@ const client = new Client({
   ],
 });
 
-const token = process.env.DISCORD_TOKEN;
+const token = process.env.DISCORD_BOT_TOKEN;
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-pro-latest",
