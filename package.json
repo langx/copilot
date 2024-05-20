@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "type": "module",
   "description": "An introduction to LangX Copilot, an AI-powered tool designed to enhance your language learning experience with personalized feedback and privacy-focused features.",
-  "main": "index.js",
   "scripts": {
     "discord": "node discord/registerCommands.js && node discord/bot.js"
   },
@@ -16,10 +15,26 @@
     "langx",
     "language",
     "learning",
-    "practice"
+    "practice",
+    "open-source",
+    "alternative",
+    "practice",
+    "culture",
+    "edtech",
+    "exchange",
+    "connect",
+    "learn",
+    "languages",
+    "tandem",
+    "languagelearning",
+    "language-exchange",
+    "langx",
+    "languageexchange",
+    "languagexchange",
+    "hellotalk"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/langx/copilot/issues"
   },
