@@ -25,7 +25,9 @@
   },
   "homepage": "https://github.com/langx/copilot#readme",
   "dependencies": {
+    "@discordjs/rest": "^2.3.0",
     "@google/generative-ai": "^0.11.3",
+    "discord-api-types": "^0.37.84",
     "discord.js": "^14.15.2",
     "dotenv": "^16.4.5"
   }
