@@ -137,11 +137,11 @@ client.on("interactionCreate", async (interaction) => {
 
       if (response.correction) {
         await interaction.editReply(
-          `📝 **Your message:** ${userMessage}\n✅ **Correction:** ${response.correction}\nℹ️ _Explanation:_ ${response.explanation}`
+          `📝 **Your message:** ${userMessage}\n✅ **Correction:** ${response.correction}\nℹ️ **Explanation:** ${response.explanation}`
         );
       } else {
         await interaction.editReply(
-          `📝 **Your message:** ${userMessage}\n✔️ No issues found.`
+          `📝 **Your message:** ${userMessage}\n👌 No issues found.`
         );
       }
     } catch (error) {
