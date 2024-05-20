@@ -16,7 +16,10 @@
  */
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { config } from "dotenv";
 import fs from "fs";
+
+config(); // Load environment variables from .env file
 
 // Get your API key from https://makersuite.google.com/app/apikey
 // Access your API key as an environment variable
