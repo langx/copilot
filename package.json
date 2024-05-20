@@ -5,7 +5,7 @@
   "description": "An introduction to LangX Copilot, an AI-powered tool designed to enhance your language learning experience with personalized feedback and privacy-focused features.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "discord": "node discord/bot.js"
   },
   "repository": {
     "type": "git",
