@@ -1,12 +1,12 @@
-name: Deploy Cloudflare Worker and Run Discord Script
+name: Run Discord Script
 
 on:
   push:
     branches:
-      - main # Deploy on push to the main branch
+      - main # Run on push to the main branch
 
 jobs:
-  deploy:
+  run-discord:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,19 +20,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Install Wrangler
-        run: npm install -g wrangler
-
-      - name: Extract repository name
-        id: extract
-        run: echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
-
-      - name: Deploy to Cloudflare Workers
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: wrangler deploy ./index.js --name ${{ env.REPO_NAME }} --compatibility-date 2024-05-20
 
       - name: Run Discord script
         env:
