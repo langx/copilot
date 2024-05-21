@@ -15,6 +15,7 @@ const client = new Client({
 });
 
 const token = process.env.DISCORD_BOT_TOKEN;
+const maxCharSize = 500;
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-pro-latest",
@@ -60,6 +61,14 @@ client.on("interactionCreate", async (interaction) => {
 
   if (commandName === "fix") {
     const userMessage = options.getString("message");
+
+    if (userMessage.length > maxCharSize) {
+      await interaction.reply(
+        `❌ Your message is too long! Please keep it under ${maxCharSize} characters.`
+      );
+      return;
+    }
+
     try {
       // Acknowledge the interaction to avoid timing out
       await interaction.deferReply();
