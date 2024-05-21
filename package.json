@@ -1,6 +1,6 @@
 {
   "name": "@langx/copilot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "An introduction to LangX Copilot, an AI-powered tool designed to enhance your language learning experience with personalized feedback and privacy-focused features.",
   "scripts": {
