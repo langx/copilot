@@ -2,6 +2,22 @@
 
 LangX Copilot is an innovative AI-powered tool designed to enhance your language learning journey. This feature-rich platform offers personalized feedback to improve your language skills in real-time. LangX Copilot ensures your privacy while providing corrections and explanations directly to you.
 
+### Demo
+
+You can try out LangX Copilot in the [#copilot channel](https://discord.langx.io) on Discord.
+
+![Example](./assets/example.png)
+
+## What can it do?
+
+- :hourglass_flowing_sand: **Suggest Next Message**: The bot can suggest what to say next based on the context of the conversation.
+- :hourglass_flowing_sand: **Better Way to Say**: The bot can suggest a better way to express your thoughts.
+- :hourglass_flowing_sand: **Suggest New Topic**: The bot can suggest a new topic of conversation when the current topic has been exhausted.
+- :construction: **Grammar Correction**: The bot can correct grammar mistakes in your messages.
+- :hourglass_flowing_sand: **And more**: The bot has many more features to explore!
+
+You can try it out in the [#copilot channel](https://discord.langx.io) on Discord.
+
 ## Features
 
 - **Personalized Feedback**: Get real-time corrections and explanations to enhance your language learning.
@@ -57,4 +73,18 @@ npm start discord
 npm i pm2 -g
 node discord/registerCommands.js
 pm2 start discord/bot.js --name copilot
+```
+
+## Contributing
+
+Feel free to contribute to this project and help us improve LangX Copilot. You can contribute by opening a PR or creating an issue easily.
+
+We welcome all contributions, including bug fixes, new features, and improvements to the documentation.
+
+## License
+
+This project is licensed under BSD 3-Clause License. See the [LICENSE](LICENSE) file for more details.
+
+```
+
 ```
