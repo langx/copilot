@@ -172,7 +172,7 @@ client.on("interactionCreate", async (interaction) => {
 
       const result = await chatSession.sendMessage(userMessage);
 
-      const response = JSON.parse(result.response.text);
+      const response = JSON.parse(result.response.text());
 
       if (response.correction) {
         await interaction.editReply(
