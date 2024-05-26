@@ -61,12 +61,6 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
    DISCORD_BOT_TOKEN=your_discord_token
    DISCORD_CLIENT_ID=your_discord_client_id
    GEMINI_API_KEY=your_gemini_api_key
-
-   # Example SYSTEM_INSTRUCTION: "You are a helpful assistant."
-   SYSTEM_INSTRUCTION=your_system_instruction
-
-   # Example CHAT_HISTORY:[{"role":"user","parts":[{"text":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n"}]},{"role":"model","parts":[{"text":"{\"correction\":null,\"explanation\":null}"}]}]
-   CHAT_HISTORY=your_chat_history
    ```
 
 5. **Run the application**:
