@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
-import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 
-import { genAI } from "../utils/common.js";
+import { genAI, safetySettings } from "../utils/common.js";
 
 dotenv.config();
 
@@ -20,25 +19,6 @@ const generationConfig = {
   maxOutputTokens: 8192,
   responseMimeType: "application/json",
 };
-
-const safetySettings = [
-  {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-  },
-];
 
 export async function handleInteraction(userMessage) {
   const chatSession = model.startChat({
