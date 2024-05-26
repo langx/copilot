@@ -25,7 +25,15 @@ client.on("interactionCreate", async (interaction) => {
   const { commandName, options } = interaction;
 
   if (commandName === "fix") {
-    const userMessage = options.getString("message");
+    let userMessage = options.getString("message");
+
+    // Input validation and sanitization
+    if (typeof userMessage !== "string" || userMessage.trim() === "") {
+      await interaction.reply("❌ Please provide a valid message.");
+      return;
+    }
+
+    userMessage = userMessage.trim();
 
     if (userMessage.length > maxCharSize) {
       await interaction.reply(
