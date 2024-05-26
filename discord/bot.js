@@ -9,7 +9,9 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages, // Add intent for direct messages to detect them
   ],
+  partials: ["CHANNEL"], // Enable partials for direct messages
 });
 
 const token = process.env.DISCORD_BOT_TOKEN;
@@ -23,6 +25,14 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
 
   const { commandName, options } = interaction;
+
+  // Restrict the bot from responding to direct messages
+  if (interaction.channel.type === "DM") {
+    await interaction.reply(
+      "❌ This bot does not handle direct messages. Please use commands in a public channel."
+    );
+    return;
+  }
 
   if (commandName === "fix") {
     let userMessage = options.getString("message");
