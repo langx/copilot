@@ -2,7 +2,7 @@
 
 LangX Copilot is an innovative AI-powered tool designed to enhance your language learning journey. This feature-rich platform offers personalized feedback to improve your language skills in real-time. LangX Copilot ensures your privacy while providing corrections and explanations directly to you.
 
-### Demo
+## Demo
 
 You can try out LangX Copilot in the [#copilot channel](https://discord.langx.io) on Discord.
 
@@ -57,7 +57,7 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
 
 4. **Fill in the environment variables** in the `.env` file:
 
-   ```env
+   ```sh
    DISCORD_BOT_TOKEN=your_discord_token
    DISCORD_CLIENT_ID=your_discord_client_id
    GEMINI_API_KEY=your_gemini_api_key
@@ -65,8 +65,7 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
    # Example SYSTEM_INSTRUCTION: "You are a helpful assistant."
    SYSTEM_INSTRUCTION=your_system_instruction
 
-   # Example CHAT_HISTORY:
-   # [{"role":"user","parts":[{"text":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n"}]},{"role":"model","parts":[{"text":"{\"correction\":null,\"explanation\":null}"}]}]
+   # Example CHAT_HISTORY:[{"role":"user","parts":[{"text":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n"}]},{"role":"model","parts":[{"text":"{\"correction\":null,\"explanation\":null}"}]}]
    CHAT_HISTORY=your_chat_history
    ```
 
