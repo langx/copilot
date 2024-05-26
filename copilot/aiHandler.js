@@ -1,11 +1,5 @@
-import dotenv from "dotenv";
-
 import { genAI, safetySettings } from "../utils/common.js";
-
-dotenv.config();
-
-const systemInstruction = process.env.SYSTEM_INSTRUCTION;
-const chatHistory = JSON.parse(process.env.CHAT_HISTORY);
+import { systemInstruction, chatHistory } from "../utils/instructions.js";
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-pro-latest",

@@ -131,6 +131,3 @@ dist
 
 # instructions file
 /utils/instructions.js
-
-# chatHistory file
-/utils/chatHistory.js
