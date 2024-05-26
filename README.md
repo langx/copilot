@@ -38,51 +38,51 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
 
 1. **Clone the repository**:
 
-```sh
-git clone https://github.com/langx/copilot.git
-cd copilot
-```
+   ```sh
+   git clone https://github.com/langx/copilot.git
+   cd copilot
+   ```
 
-2. **Install dependencies**
+2. **Install dependencies**:
 
-```sh
-npm install
-```
+   ```sh
+   npm install
+   ```
 
 3. **Copy `.env` file** with the following environment variables:
 
-```sh
-cp .env.sample .env
-```
+   ```sh
+   cp .env.sample .env
+   ```
 
 4. **Fill in the environment variables** in the `.env` file:
 
-```
-DISCORD_BOT_TOKEN=your_discord_token
-DISCORD_CLIENT_ID=your_discord_client_id
-GEMINI_API_KEY=your_gemini_api_key
+   ```env
+   DISCORD_BOT_TOKEN=your_discord_token
+   DISCORD_CLIENT_ID=your_discord_client_id
+   GEMINI_API_KEY=your_gemini_api_key
 
-# Example SYSTEM_INSTRUCTION: "You are a helpful assistant."
-SYSTEM_INSTRUCTION=your_system_instruction
+   # Example SYSTEM_INSTRUCTION: "You are a helpful assistant."
+   SYSTEM_INSTRUCTION=your_system_instruction
 
-# Example CHAT_HISTORY:
-# [{"role":"user","parts":[{"text":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n"}]},{"role":"model","parts":[{"text":"{\"correction\":null,\"explanation\":null}"}]}]
-CHAT_HISTORY=your_chat_history
-```
+   # Example CHAT_HISTORY:
+   # [{"role":"user","parts":[{"text":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n"}]},{"role":"model","parts":[{"text":"{\"correction\":null,\"explanation\":null}"}]}]
+   CHAT_HISTORY=your_chat_history
+   ```
 
 5. **Run the application**:
 
-```sh
-npm start discord
-```
+   ```sh
+   npm start discord
+   ```
 
 6. **Deploy the Bot (Optional)**:
 
-```sh
-npm i pm2 -g
-node discord/registerCommands.js
-pm2 start discord/bot.js --name copilot
-```
+   ```sh
+   npm i pm2 -g
+   node discord/registerCommands.js
+   pm2 start discord/bot.js --name copilot
+   ```
 
 ## Contributing
 
@@ -93,7 +93,3 @@ We welcome all contributions, including bug fixes, new features, and improvement
 ## License
 
 This project is licensed under BSD 3-Clause License. See the [LICENSE](LICENSE) file for more details.
-
-```
-
-```
