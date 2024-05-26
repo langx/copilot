@@ -28,9 +28,11 @@ client.on("interactionCreate", async (interaction) => {
 
   // Restrict the bot from responding to direct messages
   if (!interaction.channel || interaction.channel.type === "DM") {
-    await interaction.reply(
-      "❌ This bot does not handle direct messages. Please use commands in a public channel."
-    );
+    await interaction.reply({
+      content:
+        "❌ This bot does not handle direct messages. Please use commands in a <#1223003189247217758>.",
+      allowedMentions: { parse: [] }, // Disable mention parsing to prevent potential security issues
+    });
     return;
   }
 
