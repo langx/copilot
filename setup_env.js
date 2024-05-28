@@ -1,17 +1,10 @@
 import fs from "fs";
 import path from "path";
+import dotenv from "dotenv";
+import _ from "lodash";
 import { fileURLToPath } from "url";
 
 import { systemInstruction, chatHistory } from "./instructions.js";
-
-// Function to safely escape and format strings for environment variables
-const escapeStringForEnv = (str) => {
-  return str
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'")
-    .replace(/\n/g, "\\n")
-    .replace(/"/g, '\\"');
-};
 
 // Function to read the existing .env file content
 const readEnvFile = (filePath) => {
@@ -34,15 +27,13 @@ const envFilePath = path.join(__dirname, ".env");
 let envContent = readEnvFile(envFilePath);
 
 // Convert the instructions to environment variable format
-const systemInstructionValue = escapeStringForEnv(systemInstruction);
+const systemInstructionValue = encodeURI(systemInstruction);
 const chatHistoryValue = JSON.stringify(chatHistory);
 
-// Update or append the environment variables in the .env file content
+// Update or append the environment variables in the.env file content
 const updateEnvContent = (content, key, value) => {
   const regex = new RegExp(`^${key}=.*`, "m");
   const newLine = `${key}='${value}'`;
-  console.log("regex:", regex);
-  console.log("newLine:", newLine);
   if (content.match(regex)) {
     return content.replace(regex, newLine);
   } else {
@@ -61,3 +52,32 @@ envContent = updateEnvContent(envContent, "CHAT_HISTORY", chatHistoryValue);
 writeEnvFile(envFilePath, envContent);
 
 console.log("Environment variables saved successfully.");
+
+//
+// TESTS
+//
+
+// Load environment variables from.env file
+dotenv.config();
+
+// Get the value of SYSTEM_INSTRUCTION from.env file
+const systemInstructionFromEnv = decodeURIComponent(
+  process.env.SYSTEM_INSTRUCTION
+);
+
+// Compare the value with the variable you wrote
+if (systemInstructionFromEnv === systemInstruction) {
+  console.log("PASSED: systemInstruction: The values are equal.");
+} else {
+  console.log("FAILED: systemInstruction: The values are not equal.");
+}
+
+// Get the value of CHAT_HISTORY from .env file
+const chatHistoryFromEnv = JSON.parse(process.env.CHAT_HISTORY);
+
+// Compare the value with the variable you wrote
+if (_.isEqual(chatHistoryFromEnv, chatHistory)) {
+  console.log("PASSED: chatHistory: The values are equal.");
+} else {
+  console.log("FAILED: chatHistory: The values are not equal.");
+}
