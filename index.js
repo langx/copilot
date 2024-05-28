@@ -7,6 +7,7 @@ export default async function ({ req, res, log, error }) {
 
     // Parse req.body from a stringified JSON to an object
     const requestBody = JSON.parse(req.body);
+    log(`req.body: ${req.body}`);
 
     // Log some data from the request body
     if (requestBody) {
