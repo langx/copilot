@@ -5,29 +5,28 @@ export default async function ({ req, res, log, error }) {
     // Log a message
     log("Function is running");
 
-    // Parse req.body from a stringified JSON to an object
-    log(`req.body: ${req.body}`);
-    const requestBody = JSON.parse(req.body);
-
     // Log some data from the request body
-    if (requestBody) {
-      log(`Received data: ${JSON.stringify(requestBody)}`);
-      log(`req: ${JSON.stringify(req)}`);
+    if (req.body) {
+      log(`Received data: ${JSON.stringify(req.body)}`);
+    }
 
-      // Check if requestBody.message exists
-      if (requestBody.message) {
-        log(`requestBody.message: ${requestBody.message}`);
-        const userMessage = requestBody.message;
-        const aiResponse = await handleInteraction(userMessage);
-        log(`res: ${res.json}`);
-        return res.json({ response: aiResponse });
-      } else {
-        log("requestBody.message is undefined");
-        return res.send("Invalid request body", 400);
-      }
+    // Check the request method
+    if (req.method === "GET") {
+      // Send a JSON response
+      log(`res: ${res.json}`);
+      return res.json({ message: "Hello, World!" });
+    } else if (req.method === "POST") {
+      // Handle POST request
+      log(`req.body: ${JSON.parse(req.body)}`);
+      log(`req.body.message: ${JSON.parse(req.body.message)}`);
+      const userMessage = JSON.parse(req.body).message;
+      const aiResponse = await handleInteraction(userMessage);
+      log(`res: ${res.json}`);
+      return res.json({ response: aiResponse });
     } else {
-      log("requestBody is undefined");
-      return res.send("Invalid request body", 400);
+      // Handle other HTTP methods if necessary
+      log(`res: ${res.json}`);
+      return res.send("Unsupported request method", 405);
     }
   } catch (err) {
     // Log any errors
