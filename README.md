@@ -10,10 +10,10 @@ You can try out LangX Copilot in the [#copilot channel](https://discord.langx.io
 
 ## What can it do?
 
+- :construction: **Grammar Correction**: The bot can correct grammar mistakes in your messages.
 - :hourglass_flowing_sand: **Suggest Next Message**: The bot can suggest what to say next based on the context of the conversation.
 - :hourglass_flowing_sand: **Better Way to Say**: The bot can suggest a better way to express your thoughts.
 - :hourglass_flowing_sand: **Suggest New Topic**: The bot can suggest a new topic of conversation when the current topic has been exhausted.
-- :construction: **Grammar Correction**: The bot can correct grammar mistakes in your messages.
 - :hourglass_flowing_sand: **And more**: The bot has many more features to explore!
 
 You can try it out in the [#copilot channel](https://discord.langx.io) on Discord.
@@ -36,55 +36,48 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
 
 ### Installation
 
+#### Application
+
 1. **Clone the repository**:
 
    ```sh
-   git clone https://github.com/langx/copilot.git
+   git clone
    cd copilot
    ```
 
-2. **Install dependencies**:
-
-   ```sh
-   npm install
-   ```
-
-3. **Copy `.env` file** with the following environment variables:
+2. **Copy `.env` file** with the following environment variables:
 
    ```sh
    cp .env.sample .env
    ```
 
-4. **Fill in the environment variables** in the `.env` file:
+3. **Fill in the environment variables** in the `.env` file:
 
    ```sh
-   DISCORD_BOT_TOKEN=your_discord_token
-   DISCORD_CLIENT_ID=your_discord_client_id
    GEMINI_API_KEY=your_gemini_api_key
    ```
 
-5. **Set up the system instructions:**
+4. Copy instructions.js.sample to instructions.js and fill in your instructions:
 
    ```sh
-   cd utils
    cp instructions.js.sample instructions.js
    ```
 
-   Open the `instructions.js` file in your preferred text editor and edit the `systemInstruction` and `chatHistory` constant to include your own instructions.
-
-6. **Run the application**:
+5. Prepare the environment by running the prebuild script:
 
    ```sh
-   npm start discord
+   npm run prebuild
    ```
 
-7. **Deploy the Bot (Optional)**:
+6. **Deploy Appwrite Functions**:
 
-   ```sh
-   npm i pm2 -g
-   node discord/registerCommands.js
-   pm2 start discord/bot.js --name copilot
-   ```
+   Deploy the Appwrite functions, ensuring that the environment variables are correctly set during the deployment process. We utilize Git integration for deployment. For more information on deploying Appwrite functions, refer to the [Appwrite Functions Documentation](https://appwrite.io/docs/advanced/self-hosting/functions).
+
+#### Setting Up the Discord Bot
+
+Detailed instructions for installing and configuring the Discord bot are provided in a separate document. This includes steps for setting up your environment, configuring the bot, and deploying it to a server.
+
+Please refer to the [Discord Bot Documentation](discord/README.md) for more information.
 
 ## Contributing
 
