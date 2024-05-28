@@ -5,24 +5,27 @@ export default async function ({ req, res, log, error }) {
     // Log a message
     log("Function is running");
 
+    // Parse req.body from a stringified JSON to an object
+    const requestBody = JSON.parse(req.body);
+
     // Log some data from the request body
-    if (req.body) {
-      log(`Received data: ${JSON.stringify(req.body)}`);
+    if (requestBody) {
+      log(`Received data: ${JSON.stringify(requestBody)}`);
       log(`req: ${JSON.stringify(req)}`);
 
-      // Check if req.body.message exists
-      if (req.body.message) {
-        log(`req.body.message: ${req.body.message}`);
-        const userMessage = req.body.message;
+      // Check if requestBody.message exists
+      if (requestBody.message) {
+        log(`requestBody.message: ${requestBody.message}`);
+        const userMessage = requestBody.message;
         const aiResponse = await handleInteraction(userMessage);
         log(`res: ${res.json}`);
         return res.json({ response: aiResponse });
       } else {
-        log("req.body.message is undefined");
+        log("requestBody.message is undefined");
         return res.send("Invalid request body", 400);
       }
     } else {
-      log("req.body is undefined");
+      log("requestBody is undefined");
       return res.send("Invalid request body", 400);
     }
   } catch (err) {
