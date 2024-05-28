@@ -17,16 +17,11 @@ export default async function ({ req, res, log, error }) {
       return res.json({ message: "Hello, World!" });
     } else if (req.method === "POST") {
       // Handle POST request
-      log(req);
-      log(typeof req);
-      log(typeof req.body);
       // log(`req.body: ${JSON.parse(req.body)}`);
-      // log(`req.body.message: ${JSON.parse(req.body.message)}`);
-      // const userMessage = JSON.parse(req.body).message;
-      // const aiResponse = await handleInteraction(userMessage);
-      // log(`res: ${res.json}`);
-      // return res.json({ response: aiResponse });
-      return res.json({ message: "Hello, World!" });
+      const userMessage = JSON.parse(req.body).message;
+      log(`userMessage: ${userMessage}`);
+      const aiResponse = await handleInteraction(userMessage);
+      return res.json({ response: aiResponse });
     } else {
       // Handle other HTTP methods if necessary
       log(`res: ${res.json}`);
