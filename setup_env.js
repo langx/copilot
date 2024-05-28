@@ -1,5 +1,5 @@
 import fs from "fs";
-import { systemInstruction, chatHistory } from "./utils/instructions.js";
+import { systemInstruction, chatHistory } from "./instructions.js";
 
 const envFilePath = new URL(".env", import.meta.url);
 let envContent = "";

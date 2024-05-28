@@ -1,5 +1,5 @@
 import { genAI, safetySettings } from "../utils/common.js";
-import { systemInstruction, chatHistory } from "../utils/instructions.js";
+import { systemInstruction, chatHistory } from "../instructions.js";
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-pro-latest",
