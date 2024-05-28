@@ -13,15 +13,17 @@ export default async function ({ req, res, log, error }) {
     // Check the request method
     if (req.method === "GET") {
       // Send a JSON response
+      log(`res: ${res.json}`);
       return res.json({ message: "Hello, World!" });
     } else if (req.method === "POST") {
       // Handle POST request
       const userMessage = req.body.message;
       const aiResponse = await handleInteraction(userMessage);
-      log(`AI Response: ${JSON.stringify(aiResponse || {})}`);
+      log(`res: ${res.json}`);
       return res.json({ response: aiResponse });
     } else {
       // Handle other HTTP methods if necessary
+      log(`res: ${res.json}`);
       return res.send("Unsupported request method", 405);
     }
   } catch (err) {
