@@ -7,7 +7,7 @@ export default async function ({ req, res, log, error }) {
 
     // Log some data from the request body
     if (req.body) {
-      log(`Received data: ${JSON.stringify(req.body)}`);
+      log(`Received data: ${req.body}`);
     }
 
     // Check the request method
