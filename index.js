@@ -17,6 +17,8 @@ export default async function ({ req, res, log, error }) {
       return res.json({ message: "Hello, World!" });
     } else if (req.method === "POST") {
       // Handle POST request
+      log(`req.body: ${req.body}`);
+      log(`req.body.message: ${req.body.message}`);
       const userMessage = req.body.message;
       const aiResponse = await handleInteraction(userMessage);
       log(`res: ${res.json}`);
