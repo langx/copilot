@@ -17,7 +17,7 @@ export default async function ({ req, res, log, error }) {
       return res.json({ message: "Hello, World!" });
     } else if (req.method === "POST") {
       // Handle POST request
-      log(`req.body: ${req}`);
+      log(req);
       log(typeof req);
       log(typeof req.body);
       // log(`req.body: ${JSON.parse(req.body)}`);
