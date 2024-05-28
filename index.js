@@ -13,17 +13,20 @@ export default async function ({ req, res, log, error }) {
     // Check the request method
     if (req.method === "GET") {
       // Send a JSON response
-      log(`res: ${res.json}`);
+      log(`res: ${res}`);
       return res.json({ message: "Hello, World!" });
     } else if (req.method === "POST") {
       // Handle POST request
-      log(`req.body: ${req.body}`);
+      log(`req.body: ${req}`);
+      log(typeof req);
+      log(typeof req.body);
       // log(`req.body: ${JSON.parse(req.body)}`);
       // log(`req.body.message: ${JSON.parse(req.body.message)}`);
-      const userMessage = JSON.parse(req.body).message;
-      const aiResponse = await handleInteraction(userMessage);
-      log(`res: ${res.json}`);
-      return res.json({ response: aiResponse });
+      // const userMessage = JSON.parse(req.body).message;
+      // const aiResponse = await handleInteraction(userMessage);
+      // log(`res: ${res.json}`);
+      // return res.json({ response: aiResponse });
+      return res.json({ message: "Hello, World!" });
     } else {
       // Handle other HTTP methods if necessary
       log(`res: ${res.json}`);
