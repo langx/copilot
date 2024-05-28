@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # instructions file
-/utils/instructions.js
+instructions.js
