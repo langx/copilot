@@ -61,21 +61,24 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
    DISCORD_BOT_TOKEN=your_discord_token
    DISCORD_CLIENT_ID=your_discord_client_id
    GEMINI_API_KEY=your_gemini_api_key
-
-   # Example SYSTEM_INSTRUCTION: "You are a helpful assistant."
-   SYSTEM_INSTRUCTION=your_system_instruction
-
-   # Example CHAT_HISTORY:[{"role":"user","parts":[{"text":"Oh, thanks! Yes, I am relaxing at home. What about you? Do you have any plans for today?\n"}]},{"role":"model","parts":[{"text":"{\"correction\":null,\"explanation\":null}"}]}]
-   CHAT_HISTORY=your_chat_history
    ```
 
-5. **Run the application**:
+5. **Set up the system instructions:**
+
+   ```sh
+   cd utils
+   cp instructions.js.sample instructions.js
+   ```
+
+   Open the `instructions.js` file in your preferred text editor and edit the `systemInstruction` and `chatHistory` constant to include your own instructions.
+
+6. **Run the application**:
 
    ```sh
    npm start discord
    ```
 
-6. **Deploy the Bot (Optional)**:
+7. **Deploy the Bot (Optional)**:
 
    ```sh
    npm i pm2 -g
