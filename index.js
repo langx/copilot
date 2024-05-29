@@ -35,8 +35,8 @@ export default async function ({ req, res, log, error }) {
       const client = new Client()
         .setEndpoint(process.env.APP_ENDPOINT)
         .setProject(process.env.APP_PROJECT)
-        .setKey(process.env.API_KEY);
-      // .setJWT(req.headers["x-appwrite-user-jwt"]);
+        .setJWT(req.headers["x-appwrite-user-jwt"]);
+      // .setKey(process.env.API_KEY);
 
       log("Client initialized with endpoint, project, and JWT");
 
@@ -48,8 +48,8 @@ export default async function ({ req, res, log, error }) {
       const userDoc = await db.getDocument(
         process.env.APP_DATABASE,
         process.env.USERS_COLLECTION,
-        // req.headers["x-appwrite-user-id"]
-        "6655de0d6c9b6aefca3f" // Test user ID with early-adopter badge
+        req.headers["x-appwrite-user-id"]
+        // "6655de0d6c9b6aefca3f" // Test user ID with early-adopter badge
       );
 
       log("Fetched user document");
