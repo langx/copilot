@@ -27,16 +27,7 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js (version 18 or later)
-- npm (Node Package Manager)
-- Cloudflare account with Workers enabled
-- Discord account and bot set up in the Discord Developer Portal
-
 ### Installation
-
-#### Application
 
 1. **Clone the repository**:
 
@@ -57,13 +48,13 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
    GEMINI_API_KEY=your_gemini_api_key
    ```
 
-4. Copy instructions.js.sample to instructions.js and fill in your instructions:
+4. **Copy instructions.js.sample to instructions.js** and fill in your instructions:
 
    ```sh
    cp instructions.js.sample instructions.js
    ```
 
-5. Prepare the environment by running the prebuild script:
+5. **Prepare the environment** by running the prebuild script:
 
    ```sh
    npm run prebuild
@@ -71,9 +62,27 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
 
 6. **Deploy Appwrite Functions**:
 
+   1. Open the `appwrite.json` file in a text editor.
+   2. Update the `projectName` field with your `projectId`.
+   3. Save the changes to the appwrite.json file.
+   4. Open a terminal or command prompt in the directory where your `appwrite.json` file is located.
+   5. Install the Appwrite CLI by running the following command:
+
+   ```sh
+      npm install -g appwrite-cli
+   ```
+
+   6. Deploy the Appwrite functions by running the following command:
+
+   ```sh
+      appwrite deploy --functionId copilot
+   ```
+
    Deploy the Appwrite functions, ensuring that the environment variables are correctly set during the deployment process. We utilize Git integration for deployment. For more information on deploying Appwrite functions, refer to the [Appwrite Functions Documentation](https://appwrite.io/docs/advanced/self-hosting/functions).
 
-#### Setting Up the Discord Bot
+   > Please note that you need to have the Appwrite CLI installed and authenticated with your Appwrite project before running the appwrite functions deploy command.
+
+### Discord Bot
 
 Detailed instructions for installing and configuring the Discord bot are provided in a separate document. This includes steps for setting up your environment, configuring the bot, and deploying it to a server.
 
