@@ -67,8 +67,9 @@ export default async ({ req, res, log, error }) => {
       log(`userId: ${req.body.to}`);
 
       const aiResponse = await handleInteraction(userMessage);
-      log(aiResponse);
-      return res.json({ response: aiResponse });
+      log(JSON.stringify(aiResponse));
+
+      return res.json({ response: aiResponse.text() });
     } catch (err) {
       error(err.message);
       return res.send("An error occurred", 500);

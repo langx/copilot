@@ -30,5 +30,5 @@ export async function handleInteraction(userMessage) {
   const result = await chatSession.sendMessage(userMessage);
 
   // Print the response text to the console
-  return JSON.parse(result.response.text());
+  return result.response;
 }
