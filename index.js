@@ -86,6 +86,7 @@ export default async ({ req, res, log, error }) => {
             totalTokenCount: aiResponse.usageMetadata.totalTokenCount,
             sender: req.body.sender,
             roomId: roomId,
+            messageId: req.body.$id,
           },
           [`read("user:${req.body.sender}")`]
         );
