@@ -1,81 +1,81 @@
 import { Client, Databases } from "node-appwrite";
-
 import { handleInteraction } from "./copilot/aiHandler.js";
 import { throwIfMissing } from "./utils/utils.js";
 
-export default async function ({ req, res, log, error }) {
-  try {
-    // Log a message
-    log("Function is running");
-    // log(`req: ${JSON.stringify(req)}`);
+// Event trigger:
+// databases.650750f16cd0c482bb83.collections.65075108a4025a4f5bd7.documents.*.create
 
-    // Log some data from the request body
-    if (req.body) {
-      log(`Received data: ${req.body}`);
+export default async ({ req, res, log, error }) => {
+  try {
+    log(req);
+    throwIfMissing(req.body, ["to", "sender", "roomId", "type", "body"]);
+
+    const type = req.body.type;
+    const roomId = req.body.roomId.$id;
+
+    if (type !== "body" || req.body.body === null) {
+      return res.json(
+        { ok: false, error: "Only body type messages are processed" },
+        400
+      );
     }
 
-    // Check the request method
-    if (req.method === "GET") {
-      // Send a JSON response
-      log(`res: ${res}`);
-      return res.json({ message: "Hello, World!" });
-    } else if (req.method === "POST") {
-      throwIfMissing(JSON.parse(req.body), ["message"]);
-      throwIfMissing(req.headers, ["x-appwrite-user-id"]);
-      // Handle POST request
-      // log(`req.body: ${JSON.parse(req.body)}`);
-      // log(`req.headers: ${req.headers["x-appwrite-user-id"]}`);
+    // Init SDK
+    const client = new Client()
+      .setEndpoint(process.env.APP_ENDPOINT)
+      .setProject(process.env.APP_PROJECT)
+      .setKey(process.env.API_KEY);
 
-      const userMessage = JSON.parse(req.body).message;
-      log(`userMessage: ${userMessage}`);
-      log(`userId: ${req.headers["x-appwrite-user-id"]}`);
+    const db = new Databases(client);
 
-      // Check user has early-adopter badge or not!
-      // Init SDK
-      const client = new Client()
-        .setEndpoint(process.env.APP_ENDPOINT)
-        .setProject(process.env.APP_PROJECT)
-        .setJWT(req.headers["x-appwrite-user-jwt"]);
-      // .setKey(process.env.API_KEY);
+    const userDoc = await db.getDocument(
+      process.env.APP_DATABASE,
+      process.env.USERS_COLLECTION,
+      req.body.sender
+    );
+    log(userDoc);
 
-      log("Client initialized with endpoint, project, and JWT");
-
-      const db = new Databases(client);
-
-      log("Database initialized with client");
-
-      // Check if lastSeen and name exists
-      const userDoc = await db.getDocument(
-        process.env.APP_DATABASE,
-        process.env.USERS_COLLECTION,
-        req.headers["x-appwrite-user-id"]
-        // "6655de0d6c9b6aefca3f" // Test user ID with early-adopter badge
+    // Check if userDoc.badges has "early-adopter"
+    if (!userDoc.badges.includes("early-adopter")) {
+      log("User is not an early adopter");
+      return res.json(
+        { ok: false, error: "User is not an early adopter" },
+        400
       );
+    }
 
-      log("Fetched user document");
-      // log(userDoc);
+    const roomDoc = await db.getDocument(
+      process.env.APP_DATABASE,
+      process.env.ROOMS_COLLECTION,
+      roomId
+    );
+    log(roomDoc);
 
-      // Check if user has early-adopter badge
-      for (const badge of userDoc.badges) {
-        if (badge === "early-adopter") {
-          log("User has early-adopter badge!");
-          const aiResponse = await handleInteraction(userMessage);
-          return res.json({ response: aiResponse });
-        } else {
-          log("User does not have early-adopter badge!");
-          return res.json({
-            response: "You need to be an early-adopter to use this feature!",
-          });
-        }
-      }
-    } else {
-      // Handle other HTTP methods if necessary
-      log(`res: ${res.json}`);
-      return res.send("Unsupported request method", 405);
+    // Check if roomDoc.copilot includes this userId
+    if (!roomDoc.copilot.includes(req.body.sender)) {
+      log("User is not part of copilot in this room");
+      return res.json(
+        { ok: false, error: "User is not part of copilot in this room" },
+        400
+      );
+    }
+
+    // Additional logic for handling user interactions
+    try {
+      const userMessage = req.body.body;
+      log(`userMessage: ${userMessage}`);
+      log(`userId: ${req.body.to}`);
+
+      const aiResponse = await handleInteraction(userMessage);
+      log(aiResponse);
+      return res.json({ response: aiResponse });
+    } catch (err) {
+      error(err.message);
+      return res.send("An error occurred", 500);
     }
   } catch (err) {
     // Log any errors
     error(err.message);
     return res.send("An error occurred", 500);
   }
-}
+};
