@@ -86,7 +86,8 @@ export default async ({ req, res, log, error }) => {
             totalTokenCount: aiResponse.usageMetadata.totalTokenCount,
             sender: req.body.sender,
             roomId: roomId,
-          }
+          },
+          [`read("user:${req.body.sender}")`] // Add read permission for the sender
         );
 
         log(`Successfully created copilot document: ${copilotDoc.$id}`);
