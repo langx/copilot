@@ -76,8 +76,8 @@ export default async ({ req, res, log, error }) => {
         // Store the results in the copilot collection
         const copilotDoc = await db.createDocument(
           process.env.APP_DATABASE,
-          process.env.COPILOT_COLLECTION, // Ensure this is set to the copilot collection ID
-          "unique()", // Use 'unique()' to auto-generate an ID
+          process.env.COPILOT_COLLECTION,
+          "unique()",
           {
             correction: correctionObj.correction,
             explanation: correctionObj.explanation,
@@ -87,7 +87,7 @@ export default async ({ req, res, log, error }) => {
             sender: req.body.sender,
             roomId: roomId,
           },
-          [`read("user:${req.body.sender}")`] // Add read permission for the sender
+          [`read("user:${req.body.sender}")`]
         );
 
         log(`Successfully created copilot document: ${copilotDoc.$id}`);
