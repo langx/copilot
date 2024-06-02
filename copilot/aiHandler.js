@@ -22,6 +22,15 @@ const generationConfig = {
 
 async function handleInteraction(userMessage) {
   try {
+    if (
+      !userMessage ||
+      typeof userMessage !== "string" ||
+      userMessage.trim() === ""
+    ) {
+      console.error("Invalid user message:", userMessage);
+      throw new Error("Invalid user message");
+    }
+
     const chatSession = model.startChat({
       generationConfig,
       safetySettings,
@@ -30,6 +39,12 @@ async function handleInteraction(userMessage) {
 
     // Send user message
     const result = await chatSession.sendMessage(userMessage);
+    if (!result || !result.response) {
+      console.error("Invalid response from generative model:", result);
+      throw new Error("Invalid response from generative model");
+    }
+
+    // Return the corrected message
     return result.response;
   } catch (error) {
     console.error("Error in handleInteraction:", error);
