@@ -7,7 +7,8 @@ describe("handleInteraction function", () => {
     const userMessage = "I have an apple.";
 
     // Call the handleInteraction function with the user message and chat history
-    const response = await handleInteraction(userMessage, chatHistory);
+    let response = await handleInteraction(userMessage, chatHistory);
+    response = JSON.parse(response.text());
 
     // Check that the response object has 'correction' and 'explanation' properties
     expect(response).toHaveProperty("correction");
@@ -23,7 +24,8 @@ describe("handleInteraction function", () => {
     const userMessage = "I have a apple";
 
     // Call the handleInteraction function with the user message and chat history
-    const response = await handleInteraction(userMessage, chatHistory);
+    let response = await handleInteraction(userMessage, chatHistory);
+    response = JSON.parse(response.text());
 
     // Check that the response object has 'correction' and 'explanation' properties
     expect(response).toHaveProperty("correction");
