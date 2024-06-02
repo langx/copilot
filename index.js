@@ -67,7 +67,7 @@ export default async ({ req, res, log, error }) => {
       log(`userId: ${req.body.to}`);
 
       const aiResponse = await handleInteraction(userMessage);
-      log(JSON.stringify(aiResponse));
+      log(aiResponse.text());
 
       const correction = aiResponse.text();
       const correctionObj = JSON.parse(correction);
