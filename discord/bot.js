@@ -58,7 +58,8 @@ client.on("interactionCreate", async (interaction) => {
       // Acknowledge the interaction to avoid timing out
       await interaction.deferReply();
 
-      const response = await handleInteraction(userMessage);
+      let response = await handleInteraction(userMessage);
+      response = JSON.parse(response.text());
 
       if (response.correction) {
         await interaction.editReply(
