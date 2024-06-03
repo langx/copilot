@@ -88,7 +88,10 @@ export default async ({ req, res, log, error }) => {
             roomId: roomId,
             messageId: req.body.$id,
           },
-          [`read("user:${req.body.sender}")`]
+          [
+            `read("user:${req.body.sender}")`,
+            `write("user:${req.body.sender}")`,
+          ]
         );
 
         log(`Successfully created copilot document: ${copilotDoc.$id}`);
