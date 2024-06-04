@@ -23,7 +23,7 @@ jobs:
 
       - name: Send Discord Github Issues
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_GITHUB_ISSUES_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_GITHUB_COPILOT_ISSUES_WEBHOOK }}
           ISSUE_URL: ${{ env.issue_url }}
           ISSUE_TITLE: ${{ env.issue_title }}
           REPO_NAME: ${{ env.repo_name }}
