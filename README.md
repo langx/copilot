@@ -10,7 +10,7 @@ You can try out LangX Copilot in the [#copilot channel](https://discord.langx.io
 
 ## What can it do?
 
-- :construction: **Grammar Correction**: The bot can correct grammar mistakes in your messages.
+- :white_check_mark: **Grammar Correction**: The bot can correct grammar mistakes in your messages.
 - :hourglass_flowing_sand: **Suggest Next Message**: The bot can suggest what to say next based on the context of the conversation.
 - :hourglass_flowing_sand: **Better Way to Say**: The bot can suggest a better way to express your thoughts.
 - :hourglass_flowing_sand: **Suggest New Topic**: The bot can suggest a new topic of conversation when the current topic has been exhausted.
