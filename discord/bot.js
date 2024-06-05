@@ -63,7 +63,11 @@ client.on("interactionCreate", async (interaction) => {
 
       if (response.correction) {
         await interaction.editReply(
-          `📝 **Your message:** ${userMessage}\n✅ **Correction:** ${aiResponse.correction}\nℹ️ **Explanation:** ${aiResponse.explanation}`
+          `
+            📝 **Your message:** ${userMessage}\n
+            🤖️ ${aiResponse.explanation}
+            ✅ ${aiResponse.correction}\n
+          `
         );
       } else {
         await interaction.editReply(
