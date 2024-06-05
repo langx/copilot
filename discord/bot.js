@@ -67,13 +67,13 @@ client.on("interactionCreate", async (interaction) => {
         );
       } else {
         await interaction.editReply(
-          `📝 **Your message:** ${userMessage}\n👌 No issues found.`
+          `:pencil: ${userMessage}\n👌 No issues found.`
         );
       }
     } catch (error) {
       console.error("Error handling interaction:", error);
       await interaction.editReply(
-        `📝 **Your message:** ${userMessage}\n❌ Sorry, something went wrong while processing your request.`
+        `:pencil: ${userMessage}\n❌ Sorry, something went wrong while processing your request.`
       );
     }
   }
