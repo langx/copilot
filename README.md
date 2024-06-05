@@ -45,22 +45,14 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
 3. **Fill in the environment variables** in the `.env` file:
 
    ```sh
-   GEMINI_API_KEY=your_gemini_api_key
+   DISCORD_BOT_TOKEN=your_discord_token
+   DISCORD_CLIENT_ID=your_discord_client_id
+
+   OPENAI_API_KEY=your_openai_api_key
+   OPENAI_ASSISTANT_ID=your_openai_assistant_id
    ```
 
-4. **Copy instructions.js.sample to instructions.js** and fill in your instructions:
-
-   ```sh
-   cp instructions.js.sample instructions.js
-   ```
-
-5. **Prepare the environment** by running the prebuild script:
-
-   ```sh
-   npm run prebuild
-   ```
-
-6. **Deploy Appwrite Functions**:
+4. **Deploy Appwrite Functions**:
 
    1. Open the `appwrite.json` file in a text editor.
    2. Update the `projectName` field with your `projectId`.
@@ -72,7 +64,7 @@ You can try it out in the [#copilot channel](https://discord.langx.io) on Discor
       npm install -g appwrite-cli
    ```
 
-   6. Deploy the Appwrite functions by running the following command:
+5. Deploy the Appwrite functions by running the following command:
 
    ```sh
       appwrite deploy --functionId copilot
