@@ -1,24 +1,23 @@
 {
-    "projectId": "650750d21e4a6a589be3",
-    "projectName": "LangX",
-    "functions": [
-        {
-            "$id": "copilot",
-            "name": "copilot",
-            "runtime": "node-20.0",
-            "execute": [],
-            "events": [],
-            "schedule": "",
-            "timeout": 15,
-            "enabled": true,
-            "logging": true,
-            "entrypoint": "index.js",
-            "commands": "npm install --omit=dev",
-            "ignore": [
-                "node_modules",
-                ".npm"
-            ],
-            "path": "./"
-        }
-    ]
+  "projectId": "650750d21e4a6a589be3",
+  "projectName": "LangX",
+  "functions": [
+    {
+      "$id": "copilot",
+      "name": "copilot",
+      "runtime": "node-20.0",
+      "execute": [],
+      "events": [
+        "databases.650750f16cd0c482bb83.collections.65075108a4025a4f5bd7.documents.*.create"
+      ],
+      "schedule": "",
+      "timeout": 15,
+      "enabled": true,
+      "logging": true,
+      "entrypoint": "index.js",
+      "commands": "npm install --omit=dev",
+      "ignore": ["node_modules", ".npm"],
+      "path": "./"
+    }
+  ]
 }

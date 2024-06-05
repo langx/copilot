@@ -1,55 +1,66 @@
+import OpenAI from "openai";
 import dotenv from "dotenv";
 
-import { genAI, safetySettings } from "../utils/common.js";
-
+// Load environment variables from .env file
 dotenv.config();
 
-const systemInstruction = decodeURIComponent(process.env.SYSTEM_INSTRUCTION);
-const chatHistory = JSON.parse(process.env.CHAT_HISTORY) || [];
+// Verify that the environment variable is loaded correctly
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error(
+    "The OPENAI_API_KEY environment variable is missing or empty."
+  );
+}
 
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro-latest",
-  systemInstruction: systemInstruction,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-const generationConfig = {
-  temperature: 1,
-  topP: 0.95,
-  topK: 64,
-  maxOutputTokens: 512,
-  responseMimeType: "application/json",
-};
+const assistant_id = process.env.OPENAI_ASSISTANT_ID;
 
 async function handleInteraction(userMessage) {
-  try {
-    if (
-      !userMessage ||
-      typeof userMessage !== "string" ||
-      userMessage.trim() === ""
-    ) {
-      console.error("Invalid user message:", userMessage);
-      throw new Error("Invalid user message");
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Create the thread
+      const thread = await openai.beta.threads.create({
+        messages: [
+          {
+            role: "user",
+            content: userMessage,
+          },
+        ],
+      });
+
+      if (!thread || !thread.id) {
+        throw new Error("Thread creation failed");
+      }
+
+      console.log("Thread created:", thread);
+
+      let output = "";
+
+      openai.beta.threads.runs
+        .stream(thread.id, {
+          assistant_id: assistant_id,
+        })
+        .on("textDelta", (textDelta) => {
+          output += textDelta.value;
+        })
+        .on("end", async () => {
+          console.log(output);
+
+          // Delete Thread
+          const response = await openai.beta.threads.del(thread.id);
+          if (response.deleted) {
+            console.log("Thread deleted");
+          }
+          // You can now use the 'output' variable for further processing
+          resolve(output);
+        });
+    } catch (error) {
+      console.error("Error creating thread or run:", error);
+      reject(error);
     }
-
-    const chatSession = model.startChat({
-      generationConfig,
-      safetySettings,
-      history: chatHistory,
-    });
-
-    // Send user message
-    const result = await chatSession.sendMessage(userMessage);
-    if (!result || !result.response) {
-      console.error("Invalid response from generative model:", result);
-      throw new Error("Invalid response from generative model");
-    }
-
-    // Return the corrected message
-    return result.response;
-  } catch (error) {
-    console.error("Error in handleInteraction:", error);
-    throw error;
-  }
+  });
 }
 
 export { handleInteraction };

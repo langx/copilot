@@ -58,12 +58,16 @@ client.on("interactionCreate", async (interaction) => {
       // Acknowledge the interaction to avoid timing out
       await interaction.deferReply();
 
-      let response = await handleInteraction(userMessage);
-      response = JSON.parse(response.text());
+      let aiResponse = await handleInteraction(userMessage);
+      aiResponse = JSON.parse(aiResponse);
 
       if (response.correction) {
         await interaction.editReply(
-          `📝 **Your message:** ${userMessage}\n✅ **Correction:** ${response.correction}\nℹ️ **Explanation:** ${response.explanation}`
+          `
+            📝 **Your message:** ${userMessage}\n
+            🤖️ ${aiResponse.explanation}
+            ✅ ${aiResponse.correction}\n
+          `
         );
       } else {
         await interaction.editReply(
