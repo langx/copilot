@@ -66,24 +66,22 @@ export default async ({ req, res, log, error }) => {
       log(`userMessage: ${userMessage}`);
       log(`userId: ${req.body.to}`);
 
-      const aiResponse = await handleInteraction(userMessage);
-      log(aiResponse.text());
+      let aiResponse = await handleInteraction(userMessage);
+      aiResponse = JSON.parse(aiResponse);
 
-      const correction = aiResponse.text();
-      const correctionObj = JSON.parse(correction);
+      log(`sender: ${req.body.sender}`);
+      log(`roomId: ${roomId}`);
+      log(`aiResponse ${aiResponse}`);
 
-      if (correctionObj.correction && correctionObj.explanation) {
+      if (aiResponse.correction && aiResponse.explanation) {
         // Store the results in the copilot collection
         const copilotDoc = await db.createDocument(
           process.env.APP_DATABASE,
           process.env.COPILOT_COLLECTION,
           "unique()",
           {
-            correction: correctionObj.correction,
-            explanation: correctionObj.explanation,
-            promptTokenCount: aiResponse.usageMetadata.promptTokenCount,
-            candidatesTokenCount: aiResponse.usageMetadata.candidatesTokenCount,
-            totalTokenCount: aiResponse.usageMetadata.totalTokenCount,
+            correction: aiResponse.correction,
+            explanation: aiResponse.explanation,
             sender: req.body.sender,
             roomId: roomId,
             messageId: req.body.$id,
@@ -97,7 +95,7 @@ export default async ({ req, res, log, error }) => {
         log(`Successfully created copilot document: ${copilotDoc.$id}`);
       }
 
-      return res.json({ response: correctionObj });
+      return res.json({ response: aiResponse });
     } catch (err) {
       error(err.message);
       return res.send("An error occurred", 500);
