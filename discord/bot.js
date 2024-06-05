@@ -61,13 +61,9 @@ client.on("interactionCreate", async (interaction) => {
       let aiResponse = await handleInteraction(userMessage);
       aiResponse = JSON.parse(aiResponse);
 
-      if (response.correction) {
+      if (aiResponse.correction && aiResponse.explanation) {
         await interaction.editReply(
-          `
-            📝 **Your message:** ${userMessage}\n
-            🤖️ ${aiResponse.explanation}
-            ✅ ${aiResponse.correction}\n
-          `
+          `:pencil: ${userMessage}\n:robot: ${aiResponse.explanation}\n:white_check_mark: ${aiResponse.correction}`
         );
       } else {
         await interaction.editReply(
