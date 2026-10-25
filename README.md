@@ -1,91 +1,73 @@
-# :robot: LangX Copilot
+# [copilot.langx.io](https://copilot.langx.io)
 
-LangX Copilot is an innovative AI-powered tool designed to enhance your language learning journey. This feature-rich platform offers personalized feedback to improve your language skills in real-time. LangX Copilot ensures your privacy while providing corrections and explanations directly to you.
+LangX Copilot is the AI helper inside a LangX chat with a real person: it checks
+the sentence you are about to send, says it in the language you are learning,
+explains a message you did not understand, and offers reply ideas. It never
+sends anything for you, and the person you are talking to sees none of it.
 
-## Demo
+**Copilot itself lives in the app, in [langx/langx](https://github.com/langx/langx).**
+This repository is the website that explains it, plus the code of Copilot's
+first version, a Discord bot that is inactive (see [below](#the-discord-bot-inactive)).
 
-You can try out LangX Copilot in the [#copilot channel](https://discord.langx.io) on Discord.
+## The website
 
-![Example](./assets/example.png)
+`site/` is copilot.langx.io: HTML, CSS and JavaScript with no build step, so
+what is in the folder is what ships — the same arrangement as its sister site,
+[token.langx.io](https://github.com/langx/token-website).
 
-## What can it do?
+> **Deploys.** Cloudflare Pages project `copilot`, connected to this repository
+> (Git integration, like `token-website`). A push to `main` that touches
+> `site/` is a production deploy; any other branch that touches `site/` gets a
+> preview URL. The project's root directory is `site`, there is no build
+> command, and changes outside `site/` — the bot — deploy nothing. The domain
+> is a proxied CNAME `copilot` → `copilot-bok.pages.dev` in the `langx.io` zone.
 
-- :white_check_mark: **Grammar Correction**: The bot can correct grammar mistakes in your messages.
-- :hourglass_flowing_sand: **Suggest Next Message**: The bot can suggest what to say next based on the context of the conversation.
-- :hourglass_flowing_sand: **Better Way to Say**: The bot can suggest a better way to express your thoughts.
-- :hourglass_flowing_sand: **Suggest New Topic**: The bot can suggest a new topic of conversation when the current topic has been exhausted.
-- :hourglass_flowing_sand: **And more**: The bot has many more features to explore!
+> **Keeping it honest.** Everything the page says about Copilot comes from the
+> app: the helps and their names from `packages/shared/src/copilot.ts` and the
+> English strings in `apps/mobile/src/i18n/messages/en.ts`, the allowances from
+> `PLAN_LIMITS` in `packages/shared/src/limits.ts`, and the privacy wording from
+> the consent sheet and the app's privacy policy. When Copilot changes there,
+> this page has to change with it. It is sold as a beta, so it says beta.
 
-You can try it out in the [#copilot channel](https://discord.langx.io) on Discord.
+> **Search.** `robots.txt`, `sitemap.xml` and `404.html` exist so Cloudflare
+> Pages does not treat the site as a single-page app and answer every unknown
+> path with the homepage and a 200. `_headers` keeps the 404 page, `tools/` and
+> every `*.pages.dev` preview out of search results.
 
-## Features
+> **Social preview.** `site/images/site-preview.png` (1200×630) is rendered
+> from [`site/tools/og-source.html`](site/tools/og-source.html). After a copy
+> change:
+>
+> ```bash
+> "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 --virtual-time-budget=8000 --window-size=1200,630 --screenshot=og@2x.png site/tools/og-source.html && magick og@2x.png -resize 1200x630 -strip site/images/site-preview.png
+> ```
 
-- **Personalized Feedback**: Get real-time corrections and explanations to enhance your language learning.
-- **Grammar Correction**: Automatically corrects grammar mistakes and provides detailed explanations.
-- **Privacy Focused**: Feedback is provided confidentially, ensuring your privacy is maintained.
-- **Supports Multiple Languages**: Not limited to English, LangX Copilot supports various languages for grammar correction.
+To look at it locally, serve the folder from its root so the absolute paths in
+`404.html` resolve:
 
-## Getting Started
+```bash
+python3 -m http.server 8000 --directory site
+```
 
-### Installation
+## The Discord bot (inactive)
 
-1. **Clone the repository**:
+Before Copilot was built into the app it was two smaller things, and their code
+is still here:
 
-   ```sh
-   git clone
-   cd copilot
-   ```
-
-2. **Copy `.env` file** with the following environment variables:
-
-   ```sh
-   cp .env.sample .env
-   ```
-
-3. **Fill in the environment variables** in the `.env` file:
-
-   ```sh
-   DISCORD_BOT_TOKEN=your_discord_token
-   DISCORD_CLIENT_ID=your_discord_client_id
-
-   OPENAI_API_KEY=your_openai_api_key
-   OPENAI_ASSISTANT_ID=your_openai_assistant_id
-   ```
-
-4. **Deploy Appwrite Functions**:
-
-   1. Open the `appwrite.json` file in a text editor.
-   2. Update the `projectName` field with your `projectId`.
-   3. Save the changes to the appwrite.json file.
-   4. Open a terminal or command prompt in the directory where your `appwrite.json` file is located.
-   5. Install the Appwrite CLI by running the following command:
-
-   ```sh
-      npm install -g appwrite-cli
-   ```
-
-5. Deploy the Appwrite functions by running the following command:
-
-   ```sh
-      appwrite deploy --functionId copilot
-   ```
-
-   Deploy the Appwrite functions, ensuring that the environment variables are correctly set during the deployment process. We utilize Git integration for deployment. For more information on deploying Appwrite functions, refer to the [Appwrite Functions Documentation](https://appwrite.io/docs/advanced/self-hosting/functions).
-
-   > Please note that you need to have the Appwrite CLI installed and authenticated with your Appwrite project before running the appwrite functions deploy command.
-
-### Discord Bot
-
-Detailed instructions for installing and configuring the Discord bot are provided in a separate document. This includes steps for setting up your environment, configuring the bot, and deploying it to a server.
-
-Please refer to the [Discord Bot Documentation](discord/README.md) for more information.
+- `discord/` — a Discord bot with one command, `/fix`, that corrected a message
+  and explained why, in public, in the LangX server. **It is inactive for now.**
+  It was written against OpenAI's Assistants API, which OpenAI shut down on
+  26 August 2026, so it cannot answer as written. Setup notes are in
+  [`discord/README.md`](discord/README.md).
+- `index.js`, `copilot/` and `appwrite.json` — the Appwrite function behind the
+  Copilot switch in LangX v1, which is retired.
 
 ## Contributing
 
-Feel free to contribute to this project and help us improve LangX Copilot. You can contribute by opening a PR or creating an issue easily.
-
-We welcome all contributions, including bug fixes, new features, and improvements to the documentation.
+Issues and pull requests are welcome — for the website here, and for Copilot
+itself in [langx/langx](https://github.com/langx/langx).
 
 ## License
 
-This project is licensed under BSD 3-Clause License. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the BSD 3-Clause License. See the
+[LICENSE](LICENSE) file for more details.

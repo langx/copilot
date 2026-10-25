@@ -1,0 +1,2829 @@
+/* =====================================================================
+   copilot.langx.io: "Margin notes"
+   A manuscript being marked up by a careful editor.
+   Ink is what people write. Green is a correction from a person.
+   Blue is Copilot, always: its marks, its notes, its label.
+   ===================================================================== */
+
+:root {
+  /* Paper and ink */
+  --paper: #faf7f0;
+  --paper-2: #f2ede1;
+  --card: #fffdf8;
+  --ink: #17191c;
+  --ink-2: #33363b;
+  --muted: #62676d;
+  --faint: #b9b2a2;
+  --rule: #e6dfcf;
+  --rule-strong: #d5cbb5;
+  --struck: #85806f;
+
+  /* The two voices. --blue is the glyph and line colour; --blue-text is
+     the app's own darker blue for words (its `echoText`), which keeps
+     4.5:1 on the blue tint as well as on paper. */
+  --blue: #3b6cf6;
+  --blue-ink: #2f5ee0;
+  --blue-text: #2a54d0;
+  --blue-tint: #e9f0fe;
+  --green: #009f70;
+  --green-ink: #007f59;
+  --green-tint: #e2f6ee;
+
+  /* The one committing action */
+  --yellow: #ffc409;
+  --yellow-ink: #201900;
+
+  --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
+
+  /* The manuscript grid: a hanging column for section marks, the text
+     column, and the outer margin where the notes live. */
+  --hang: 5.5rem;
+  --margin: 17.5rem;
+  --gap: 3rem;
+  --pad: 2rem;
+  --cols: [hang] var(--hang) [text] minmax(0, 1fr) [margin] var(--margin);
+  --shell: 76rem;
+
+  --ease-pen: cubic-bezier(0.45, 0.05, 0.25, 1);
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1c1f24;
+    --paper-2: #202429;
+    --card: #252a30;
+    --ink: #f2f3f5;
+    --ink-2: #d9dce1;
+    --muted: #a4aab2;
+    --faint: #4f555d;
+    --rule: #2c3036;
+    --rule-strong: #3b4047;
+    --struck: #737981;
+
+    --blue: #7c9cf9;
+    --blue-ink: #8eaafa;
+    --blue-text: #8eaafa;
+    --blue-tint: #202b45;
+    --green: #34c796;
+    --green-ink: #34c796;
+    --green-tint: #16332a;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.1875rem;
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image: none;
+  }
+}
+
+p,
+h1,
+h2,
+h3,
+ol,
+ul,
+dl,
+dd,
+figure,
+table {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--muted);
+  text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 0.15s ease;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+code,
+.cmd {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  font-variant-numeric: normal;
+}
+
+var {
+  font-style: italic;
+  font-family: var(--serif);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 50;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.skip:focus {
+  top: 1rem;
+}
+
+/* The app's line glyphs (Feather), at the size of the text around them. */
+.ic {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Copilot's label, as the app draws it: a blue pill with the chip glyph. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.24rem 0.66rem 0.26rem 0.52rem;
+  border-radius: 999px;
+  background: var(--blue-tint);
+  color: var(--blue-text);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: nowrap;
+  font-variant-numeric: normal;
+}
+
+.pill .ic {
+  width: 1.1em;
+  height: 1.1em;
+  color: var(--blue);
+}
+
+.pill--chip {
+  font-size: 0.92rem;
+  padding: 0.38rem 0.85rem 0.4rem 0.66rem;
+}
+
+/* ---------------------------------------------------------------------
+   Masthead
+   --------------------------------------------------------------------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: var(--paper);
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .masthead {
+    background-image: none;
+  }
+}
+
+.masthead.is-scrolled {
+  border-bottom-color: var(--rule);
+}
+
+.masthead-row {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding: 0.85rem var(--pad);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.3rem;
+  line-height: 1;
+  white-space: nowrap;
+  flex: none;
+}
+
+.brand a {
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark img {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+}
+
+.brand-slash {
+  color: var(--faint);
+  font-weight: 300;
+}
+
+.brand-product {
+  font-style: italic;
+  font-weight: 450;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.site-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+}
+
+.site-nav a {
+  font-size: 1.02rem;
+  text-decoration: none;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.site-nav a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+}
+
+.nav-out {
+  margin-left: auto;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--rule);
+}
+
+.nav-out a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.out {
+  width: 0.55em;
+  height: 0.55em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.6;
+  align-self: center;
+}
+
+/* The one yellow thing in view: a highlighter pass over the words. */
+.cta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.95rem 0.6rem;
+  background: var(--yellow);
+  color: var(--yellow-ink);
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 3px 9px 4px 10px / 8px 4px 9px 4px;
+  box-shadow: inset 0 -2px 0 rgba(32, 25, 0, 0.14);
+  transition: transform 0.15s var(--ease-out), box-shadow 0.15s ease;
+}
+
+.cta:hover {
+  transform: rotate(-0.6deg);
+  box-shadow: inset 0 -3px 0 rgba(32, 25, 0, 0.2);
+}
+
+.cta:focus-visible {
+  outline-color: var(--ink);
+}
+
+.menu-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.2rem 0.45rem 0.5rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-style: italic;
+  font-size: 1.05rem;
+}
+
+.menu-toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.menu-toggle[aria-expanded="true"] svg {
+  transform: scaleY(0.4);
+}
+
+/* ---------------------------------------------------------------------
+   Shell: the page as a manuscript sheet with a margin rule
+   --------------------------------------------------------------------- */
+
+.shell {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+/* The margin rule: the thin line that separates the text from the notes.
+   It runs from the proof down to the end of §7. The status board has its
+   own leaders, and the footnotes sit below the rule. */
+.hero,
+.chapter {
+  position: relative;
+}
+
+.hero::after,
+.chapter:not(#faq):not(#status)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(var(--margin) + var(--gap) / 2);
+  width: 1px;
+  background: var(--rule);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero::after {
+  top: 2.5rem;
+}
+
+.hero,
+.chapter,
+.step,
+.fact,
+.sub,
+.proof--hero {
+  display: grid;
+  grid-template-columns: var(--cols);
+  column-gap: var(--gap);
+}
+
+/* ---------------------------------------------------------------------
+   Hero: a correction, explained
+   --------------------------------------------------------------------- */
+
+.hero {
+  padding-block: 3.5rem 2rem;
+  align-items: end;
+}
+
+.hero-intro {
+  grid-column: hang / margin;
+  grid-row: 1;
+  max-width: 48rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 1.2rem + 2.6vw, 3.45rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  font-variation-settings: "opsz" 72;
+  text-wrap: balance;
+  max-width: 15.5em;
+}
+
+.lede {
+  margin-top: 1.4rem;
+  max-width: 36em;
+  font-size: 1.28rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.hero-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.75rem;
+  font-size: 1.08rem;
+}
+
+.hero-links a {
+  font-style: italic;
+  text-decoration-color: var(--ink);
+}
+
+.hero-status {
+  grid-column: margin;
+  grid-row: 1;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  padding-bottom: 0.35rem;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+.hero-status p {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.hero-status strong {
+  font-weight: 600;
+}
+
+/* The page's own status badge, in ink: the blue pill is kept for answers
+   Copilot writes. Same mark as the status board in §8. */
+.hero-badge {
+  align-items: center !important;
+  gap: 0.55rem !important;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* Status glyphs: filled for a beta you can use, an open ring for closed,
+   a broken ring for history. */
+.dot {
+  flex: none;
+  display: inline-block;
+  width: 0.62em;
+  height: 0.62em;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  transform: translateY(-0.02em);
+}
+
+.dot-live {
+  background: currentColor;
+}
+
+.dot-hist {
+  border-style: dashed;
+  border-width: 1.3px;
+}
+
+/* The figure that holds a marked-up sentence. It is its own size
+   container so the specimen always fits the room it has. */
+.proof {
+  position: relative;
+  container-type: inline-size;
+}
+
+.proof--hero {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: 3rem;
+  grid-template-rows: repeat(6, auto) minmax(0, 1fr);
+  --room: calc(100cqi - var(--margin) - var(--gap));
+  --fs: min(6.6rem, calc(var(--room) / 10.4));
+  --t-fix: 2.2s;
+  --t-line: 2.75s;
+  --t-note: 3.2s;
+}
+
+.proof--hero > .proof-label,
+.proof--hero > .specimen,
+.proof--hero > .corrected,
+.proof--hero > .gloss,
+.proof--hero > figcaption {
+  grid-column: hang / margin;
+}
+
+.proof--hero > .note {
+  grid-column: margin;
+  grid-row: 3 / -1;
+  align-self: start;
+}
+
+.proof-label,
+.proof-kind {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  line-height: 1.3;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+.proof-kind {
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px dashed var(--rule-strong);
+}
+
+.proof-label--fix {
+  color: var(--green-ink);
+}
+
+.proof-label--copilot {
+  color: var(--blue-text);
+}
+
+/* The sentence itself, set large. */
+.specimen {
+  font-size: var(--fs);
+  line-height: 1.72;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  word-spacing: 0.1em;
+  font-variation-settings: "opsz" 72;
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
+  margin-top: 0.08em;
+}
+
+.w {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+
+.g {
+  position: relative;
+}
+
+.w-del > .g {
+  color: var(--struck);
+}
+
+/* Proofreader's marks. All drawn as SVG strokes, sized in ems of the
+   specimen so they track the type at every size. A person's marks are
+   green; Copilot's are blue (.mk--blue). */
+.mk {
+  position: absolute;
+  overflow: visible;
+  fill: none;
+  stroke: var(--green);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.mk--blue {
+  stroke: var(--blue);
+}
+
+.mk path {
+  stroke-width: 3.4;
+}
+
+.mk circle {
+  fill: var(--green);
+  stroke: none;
+}
+
+/* A line through: take it out. */
+.mk-strike {
+  left: -0.05em;
+  width: calc(100% + 0.1em);
+  top: 0.39em;
+  height: 0.19em;
+}
+
+/* A caret at the baseline: put something in here. */
+.caret {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  bottom: 0;
+  width: 0;
+}
+
+.mk-caret {
+  left: -0.21em;
+  width: 0.42em;
+  top: 0.74em;
+  height: 0.36em;
+}
+
+.mk-caret path {
+  stroke-width: 4.6;
+}
+
+/* The pigtail that ends a strike: it curls on past the end of the word, at
+   the height of the line through it, so it can never be read as an accent
+   over the last letter. */
+.mk-dele {
+  left: calc(100% + 0.02em);
+  top: 0.22em;
+  width: 0.2em;
+  height: 0.34em;
+}
+
+.mk-dele path {
+  stroke-width: 3.2;
+}
+
+/* A hand underline: Copilot pointing at the words it explains. */
+.mk-under {
+  left: -0.04em;
+  width: calc(100% + 0.08em);
+  top: 0.96em;
+  height: 0.13em;
+}
+
+.mk-under path {
+  stroke-width: 3;
+}
+
+/* What the editor writes above the line. */
+.ins {
+  position: absolute;
+  left: 50%;
+  top: -1.02em;
+  transform: translateX(-50%);
+  font-size: 0.4em;
+  font-style: italic;
+  font-weight: 450;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--green-ink);
+  white-space: nowrap;
+  font-variation-settings: "opsz" 36;
+}
+
+.ins--blue {
+  color: var(--blue-text);
+}
+
+.caret .ins {
+  left: 0;
+  font-size: 0.52em;
+  font-weight: 500;
+}
+
+/* The fair copy underneath. */
+.corrected {
+  font-size: max(1.65rem, calc(var(--fs) * 0.44));
+  line-height: 1.15;
+  font-weight: 450;
+  letter-spacing: -0.012em;
+  color: var(--green);
+  font-variation-settings: "opsz" 60;
+  font-variant-numeric: lining-nums;
+  margin-top: 0.3rem;
+}
+
+/* Copilot's version is drawn the way the app draws it: the sentence in
+   ink, only the changed words in blue. */
+.corrected--copilot {
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+.corrected--copilot .chg {
+  color: var(--blue-text);
+  font-weight: 600;
+}
+
+.gloss {
+  margin-top: 0.6rem;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.proof--hero .gloss {
+  margin-bottom: 1.6rem;
+}
+
+/* Copilot's voice: a note in the margin, in blue. */
+.note {
+  color: var(--blue-text);
+  position: relative;
+}
+
+.note-label {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.7rem;
+}
+
+.note-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+}
+
+.note-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.note-text {
+  font-style: italic;
+  font-size: 1.22rem;
+  line-height: 1.46;
+  font-variation-settings: "opsz" 24;
+  text-wrap: pretty;
+  hanging-punctuation: first;
+}
+
+.proof figcaption {
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 48em;
+  text-wrap: pretty;
+}
+
+.replay {
+  padding: 0;
+  background: none;
+  border: 0;
+  font-style: italic;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
+.replay:hover {
+  text-decoration-color: currentColor;
+}
+
+/* The thin line from a margin note to the mark it explains. Drawn by
+   main.js because it depends on where the words land. */
+.connector {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.connector circle {
+  fill: var(--blue);
+  stroke: none;
+}
+
+/* ---------------------------------------------------------------------
+   Motion. Only ever under html.motion (JS on, no reduced-motion request).
+   Everything below starts from the final state otherwise.
+   --------------------------------------------------------------------- */
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1.01;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes write {
+  from {
+    clip-path: inset(-30% 110% -30% -10%);
+  }
+  to {
+    clip-path: inset(-30% -10% -30% -10%);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes strike-fade {
+  from {
+    color: var(--ink);
+  }
+  to {
+    color: var(--struck);
+  }
+}
+
+.motion .proof.play .mk path {
+  stroke-dasharray: 1 1.02;
+  animation: draw 0.42s var(--ease-pen) both;
+  animation-delay: var(--d, 0s);
+}
+
+.motion .proof.play .mk-under path {
+  animation-duration: 0.55s;
+}
+
+.motion .proof.play .mk-dele path {
+  animation-delay: calc(var(--d, 0s) + 0.35s);
+}
+
+.motion .proof.play .w-del > .g {
+  animation: strike-fade 0.35s ease-out both;
+  animation-delay: calc(var(--d, 0s) + 0.2s);
+}
+
+.motion .proof.play .ins {
+  animation: write 0.42s var(--ease-pen) both;
+  animation-delay: calc(var(--d, 0s) + 0.3s);
+}
+
+.motion .proof.play .proof-label--fix,
+.motion .proof.play .proof-label--copilot,
+.motion .proof.play .proof-label--act,
+.motion .proof.play .ui-row {
+  animation: appear 0.4s ease-out both;
+  animation-delay: var(--t-fix);
+}
+
+.motion .proof.play .corrected {
+  animation: write 0.85s var(--ease-pen) both;
+  animation-delay: calc(var(--t-fix) + 0.1s);
+}
+
+.motion .proof.play .note {
+  animation: settle 0.55s var(--ease-out) both;
+  animation-delay: var(--t-note);
+}
+
+.motion .proof.play .gloss {
+  animation: appear 0.5s ease-out both;
+  animation-delay: var(--t-note);
+}
+
+.motion .proof.play .connector path {
+  stroke-dasharray: 1 1.02;
+  animation: draw 0.7s var(--ease-pen) both;
+  animation-delay: var(--t-line-js, var(--t-line));
+}
+
+.motion .proof.play .connector .cn-head {
+  animation-duration: 0.18s;
+  animation-delay: calc(var(--t-line-js, var(--t-line)) + 0.66s);
+}
+
+.motion .proof.play .connector circle {
+  animation: appear 0.2s ease-out both;
+  animation-delay: var(--t-line-js, var(--t-line));
+}
+
+.motion .proof.play .connector.static path,
+.motion .proof.play .connector.static circle {
+  animation: none;
+}
+
+/* Hold the pen until the web fonts are in, so the words do not reflow
+   under marks that are being drawn (the head script sets fonts-ready when
+   document.fonts is ready, or after 2.5 s at the latest), and hold a plate
+   further down until it scrolls into view (main.js sets and clears
+   "waiting"). */
+.motion:not(.fonts-ready) .proof.play,
+.motion:not(.fonts-ready) .proof.play *,
+.motion .proof.play.waiting,
+.motion .proof.play.waiting * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion .proof.play *,
+  .motion .proof.play {
+    animation: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Chapters
+   --------------------------------------------------------------------- */
+
+.chapter {
+  padding-top: 6.5rem;
+}
+
+.chapter-head {
+  grid-column: text;
+  margin-bottom: 3rem;
+}
+
+.part {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin-bottom: 1.1rem;
+}
+
+.chapter h2 {
+  position: relative;
+  font-size: clamp(2.2rem, 1.4rem + 2.2vw, 3.3rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.018em;
+  font-variation-settings: "opsz" 72;
+  text-wrap: balance;
+}
+
+/* §1, §2: hung in the left margin like a chapter mark. */
+.sec {
+  position: absolute;
+  right: calc(100% + var(--gap));
+  top: 0;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--muted);
+  font-variant-numeric: lining-nums;
+  white-space: nowrap;
+}
+
+/* The language a row names on screen: set as a slot to be filled. */
+.slot {
+  font-style: italic;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--faint);
+  text-underline-offset: 0.14em;
+}
+
+.chapter-lede {
+  margin-top: 1rem;
+  max-width: 34em;
+  font-size: 1.22rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.chapter-aside {
+  grid-column: margin;
+  align-self: end;
+  margin-bottom: 3.2rem;
+}
+
+.margin-note {
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.margin-note .cmd {
+  font-style: normal;
+}
+
+/* Footnote references, superscript and linked. */
+.fnref {
+  display: inline;
+  margin-left: 0.15em;
+  font-style: normal;
+  font-size: 0.72em;
+  line-height: 1;
+  vertical-align: 0.5em;
+  font-variant-numeric: lining-nums;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 0.1em 0.15em;
+}
+
+.fnref:hover {
+  text-decoration: underline;
+}
+
+/* The marks stay small; what you can tap around them does not. */
+.fnref,
+.fnback {
+  position: relative;
+}
+
+.fnref::after,
+.fnback::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 24px);
+  height: 24px;
+  transform: translate(-50%, -50%);
+}
+
+/* ---------- Plates: the illustrations, on card stock ---------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  padding: 2rem 2.25rem 2.25rem 2.5rem;
+}
+
+.plate {
+  grid-column: text / -1;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 3rem;
+}
+
+.proof--card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--margin) - 2.25rem);
+  column-gap: var(--gap);
+  grid-template-rows: repeat(6, auto) minmax(0, 1fr);
+  --room: calc(100cqi - var(--margin) + 2.25rem - var(--gap));
+  --fs: clamp(2.1rem, calc(var(--room) / var(--len, 10.4)), 5.25rem);
+  --t-fix: 0.75s;
+  --t-line: 1.15s;
+  --t-note: 1.5s;
+}
+
+.proof--card > * {
+  grid-column: 1;
+}
+
+.proof--card > .proof-kind {
+  grid-column: 1 / -1;
+}
+
+.proof--card > .note {
+  grid-column: 2;
+  grid-row: 4 / -1;
+  align-self: start;
+}
+
+.proof--card > .connector {
+  grid-column: 1 / -1;
+}
+
+.proof--card .specimen {
+  margin-top: 0.15rem;
+}
+
+.proof--card .corrected {
+  margin-top: 0.15rem;
+}
+
+/* Explain: the message runs the full width; the note sits under it, in
+   the margin, beside a line that says what you did. */
+.proof--wide {
+  --room: 100cqi;
+  --fs: clamp(2.1rem, calc(var(--room) / var(--len, 15)), 4.6rem);
+}
+
+.proof--wide > .specimen {
+  grid-column: 1 / -1;
+}
+
+.proof--wide > .note {
+  grid-row: 4 / -1;
+  margin-top: 1.35rem;
+}
+
+/* What you did sits beside the top of the note, just under the line that
+   runs from the note up to the words, so the plate has no hole in it. */
+.proof--wide > .proof-label--act {
+  grid-row: 4 / -1;
+  align-self: start;
+  margin-top: 3.6rem;
+  max-width: 17rem;
+}
+
+/* The app's buttons, as inert drawings. */
+.ui-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  max-width: 20rem;
+  margin-top: 1.35rem;
+}
+
+.ui-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  padding: 0.35rem 1rem 0.4rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.ui-btn--blue {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ui-btn--blue {
+    background: #3b6cf6;
+    border-color: #3b6cf6;
+  }
+}
+
+.ui-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  font-family: var(--mono);
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* Say it and Reply ideas: a line in, numbered lines out. */
+.sayit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--margin) - 2.25rem);
+  column-gap: var(--gap);
+}
+
+.sayit > * {
+  grid-column: 1;
+}
+
+.sayit > .proof-kind,
+.sayit > .options {
+  grid-column: 1 / -1;
+}
+
+.source-line {
+  margin: 0.25rem 0 1.5rem;
+  font-size: clamp(1.7rem, 1.1rem + 1.6vw, 2.65rem);
+  line-height: 1.18;
+  letter-spacing: -0.014em;
+  font-variation-settings: "opsz" 60;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.options {
+  counter-reset: opt;
+  margin-top: 0.55rem;
+}
+
+.opt {
+  counter-increment: opt;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--margin) - 2.25rem);
+  column-gap: var(--gap);
+  align-items: baseline;
+  padding-block: 0.85rem 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.opt:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.opt-text {
+  position: relative;
+  padding-left: 2.1rem;
+  font-size: clamp(1.4rem, 1rem + 1.1vw, 2rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 48;
+  color: var(--blue-text);
+  text-wrap: pretty;
+}
+
+.opt-text::before {
+  content: counter(opt);
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.opt-gloss {
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--blue-text);
+}
+
+.opt-gloss::before {
+  content: "— ";
+  color: var(--blue);
+}
+
+.plate-caption {
+  margin-top: 1.25rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 34em;
+}
+
+.ideas > .options {
+  grid-column: 1;
+}
+
+.ideas .opt {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ideas > .plate-caption {
+  grid-column: 2;
+  grid-row: 6;
+  align-self: end;
+  margin: 0 0 0.9rem;
+  font-style: italic;
+}
+
+/* Here the card is the column the ideas are in; the caption sits beside. */
+.ideas > .card-head {
+  grid-column: 1;
+}
+
+.chip-line {
+  margin-bottom: 1.25rem;
+}
+
+/* The answer card's header, as the app draws it: the label, then Report
+   and a close cross, both muted. Here they are drawings, not controls. */
+.card-head {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
+  margin-top: 0.15rem;
+  color: var(--blue-text);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+.card-acts {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--muted);
+}
+
+.card-acts .ui-inline {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.card-acts .ic {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.card-acts .card-x {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* ---------- Facts: label, text, and a note in the margin ---------- */
+
+.facts {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 1.9rem;
+}
+
+.fact {
+  grid-template-rows: auto 1fr;
+  align-items: start;
+}
+
+.fact > dt {
+  grid-column: text;
+  grid-row: 1;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+
+.fact > dd {
+  grid-column: text;
+  grid-row: 2;
+  max-width: 36em;
+  font-size: 1.14rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.fact > dd.margin-note {
+  grid-column: margin;
+  grid-row: 1 / span 2;
+  max-width: none;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+
+/* ---------- §5 How to use it ---------- */
+
+.steps {
+  grid-column: 1 / -1;
+  counter-reset: step;
+  display: grid;
+  gap: 2.75rem;
+}
+
+.step {
+  counter-increment: step;
+  align-items: start;
+}
+
+.step::before {
+  content: counter(step);
+  grid-column: hang;
+  grid-row: 1;
+  justify-self: end;
+  font-size: 2.9rem;
+  line-height: 0.9;
+  font-weight: 300;
+  font-variant-numeric: oldstyle-nums;
+  color: var(--ink);
+  font-variation-settings: "opsz" 72;
+}
+
+.step-body {
+  grid-column: text;
+  grid-row: 1;
+  max-width: 36em;
+}
+
+.step h3 {
+  font-size: 1.55rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.45rem;
+}
+
+.step-body > p + p,
+.step-body > p + .slip {
+  margin-top: 1.25rem;
+}
+
+.step > .margin-note {
+  grid-column: margin;
+  grid-row: 1;
+  padding-top: 0.45rem;
+}
+
+/* Slips: small pieces of the app, set on card stock. */
+.slip {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.slip-composer {
+  max-width: 27rem;
+  padding: 0.9rem;
+}
+
+.cmenu {
+  background: var(--blue-tint);
+  border-radius: 14px;
+  padding: 0.3rem 0;
+}
+
+.cmenu li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.9rem;
+  padding: 0 1rem;
+  font-size: 1.04rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.cmenu .ic {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--blue);
+}
+
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+}
+
+.composer-draft {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  padding: 0.5rem 0.95rem 0.55rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.composer-draft::after {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 1.05em;
+  margin-left: 0.1em;
+  vertical-align: -0.16em;
+  border-left: 1.5px solid var(--ink);
+}
+
+.composer-copilot {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: var(--blue);
+}
+
+.composer-copilot .ic {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.composer-send {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  flex: none;
+}
+
+.composer-send .ic {
+  width: 1rem;
+  height: 1rem;
+  transform: translateX(-1px);
+}
+
+/* ---------- §6 Free and Pro ---------- */
+
+.ledger-wrap {
+  grid-column: text;
+  margin-bottom: 3rem;
+}
+
+.plan-table {
+  width: 100%;
+  max-width: 40rem;
+  border-collapse: collapse;
+  border-top: 1px solid var(--ink);
+}
+
+.plan-table th,
+.plan-table td {
+  padding: 0.95rem 0.9rem 1rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.plan-table thead th {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ink-2);
+  padding-block: 0.8rem 0.75rem;
+}
+
+.plan-table tbody th {
+  width: 28%;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.plan-table tbody td {
+  font-size: 1.12rem;
+  color: var(--ink-2);
+}
+
+.plans-aside {
+  grid-column: margin;
+  align-self: start;
+  display: grid;
+  gap: 1.1rem;
+  padding-top: 3.4rem;
+}
+
+/* ---------- §7 Privacy ---------- */
+
+.sub {
+  grid-column: 1 / -1;
+  align-items: start;
+  margin-bottom: 4rem;
+}
+
+.sub > h3 {
+  grid-column: text;
+  grid-row: 1;
+  position: relative;
+  font-size: 1.75rem;
+  font-weight: 450;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  font-variation-settings: "opsz" 48;
+  margin-bottom: 1.4rem;
+}
+
+.subsec {
+  position: absolute;
+  right: calc(100% + var(--gap));
+  top: 0.32em;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--muted);
+  font-variant-numeric: lining-nums;
+}
+
+.sub > .sheet,
+.sub > .sub-body {
+  grid-column: text;
+  grid-row: 2;
+}
+
+.sub-body > p {
+  max-width: 36em;
+  font-size: 1.14rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.sub-body > p + .slip {
+  margin-top: 1.5rem;
+}
+
+.sub-notes {
+  grid-column: margin;
+  grid-row: 2;
+  display: grid;
+  gap: 1.1rem;
+  padding-top: 0.2rem;
+}
+
+/* The consent sheet, set as the app sets it. */
+.sheet-card {
+  max-width: 27rem;
+  padding: 1.6rem 1.6rem 1.35rem;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  border-radius: 22px 22px 6px 6px;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--ink);
+  box-shadow: 0 1px 0 var(--rule);
+}
+
+.sheet-card > * + * {
+  margin-top: 0.85rem;
+}
+
+.sheet-title {
+  font-size: 1.45rem;
+  font-weight: 550;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-top: 0.9rem !important;
+}
+
+.sheet-points {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.sheet-points li {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.sheet-points .ic {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.3em;
+  color: var(--blue);
+}
+
+.sheet-link a {
+  color: var(--blue-text);
+  font-weight: 500;
+}
+
+.sheet-btns {
+  display: grid;
+  gap: 0.55rem;
+  padding-top: 0.4rem;
+}
+
+.sheet figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* What each help sends. */
+.sends {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--ink);
+}
+
+.sends th,
+.sends td {
+  padding: 1.05rem 0 1.15rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sends th {
+  width: 12rem;
+  padding-right: 1.5rem;
+  font-size: 1.16rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.sends td {
+  font-size: 1.04rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.tag {
+  display: table;
+  margin-top: 0.45rem;
+  padding: 0.12rem 0.42rem 0.14rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+.never {
+  margin-top: 1.4rem;
+}
+
+/* A ledger: a label, then the entry. */
+.ledger {
+  border-top: 1px solid var(--ink);
+}
+
+.ledger > div {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 0.95rem 0 1.05rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ledger dt {
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.ledger dd {
+  font-size: 1.04rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.slip-setting {
+  max-width: 27rem;
+  padding: 0.95rem 1.1rem 1.05rem;
+}
+
+.setting-group {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.setting-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 9px;
+  background: var(--blue-tint);
+  color: var(--blue);
+}
+
+.setting-ic .ic {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.setting-text {
+  display: grid;
+  gap: 0.1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.setting-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.setting-sub {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.toggle {
+  position: relative;
+  flex: none;
+  width: 2.75rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  background: var(--rule-strong);
+}
+
+.toggle::after {
+  content: "";
+  position: absolute;
+  top: 0.18rem;
+  left: 0.18rem;
+  width: 1.24rem;
+  height: 1.24rem;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.toggle.is-on {
+  background: var(--ink);
+}
+
+.toggle.is-on::after {
+  left: auto;
+  right: 0.18rem;
+  background: var(--paper);
+}
+
+.policy-link {
+  grid-column: text;
+  max-width: 36em;
+  padding: 1.1rem 0 1.15rem;
+  border-block: 1px solid var(--rule);
+  font-size: 1.12rem;
+  font-style: italic;
+}
+
+/* ---------- §8 Status: errata with leaders ---------- */
+
+.contents {
+  grid-column: text / -1;
+}
+
+.errata {
+  border-top: 1px solid var(--ink);
+}
+
+.entry {
+  padding-block: 1.35rem 1.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.entry-line {
+  display: flex;
+  align-items: flex-end;
+  align-items: last baseline;
+  gap: 0.75rem;
+}
+
+.entry-title {
+  flex: 0 1 auto;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 48;
+}
+
+.entry-title .cmd {
+  font-size: 0.8em;
+}
+
+.leader {
+  flex: 1 1 3rem;
+  min-width: 2rem;
+  height: 0.5rem;
+  background-image: radial-gradient(circle, var(--faint) 1.1px, transparent 1.5px);
+  background-size: 9px 4px;
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  transform: translateY(-0.28rem);
+}
+
+.status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: max-content;
+  min-width: calc(var(--margin) - 1rem);
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.is-live .status {
+  font-weight: 700;
+}
+
+.is-live .entry-title {
+  font-weight: 500;
+}
+
+.is-hist .entry-title,
+.is-closed .entry-title {
+  color: var(--ink-2);
+}
+
+.is-hist .status,
+.is-closed .status {
+  color: var(--muted);
+}
+
+.entry-desc {
+  margin-top: 0.4rem;
+  max-width: min(36em, 100% - var(--margin) - var(--gap));
+  font-size: 1.06rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.is-live .entry-desc {
+  color: var(--ink-2);
+}
+
+.margin-note--beside {
+  grid-column: text;
+  grid-row: 3;
+  margin-top: 2rem;
+  max-width: 34em;
+}
+
+/* ---------- §9 Questions, set as footnotes ---------- */
+
+.footnotes {
+  grid-column: text / -1;
+  counter-reset: fn;
+  columns: 2;
+  column-gap: var(--gap);
+  padding-top: 1.5rem;
+  position: relative;
+}
+
+/* The short rule that opens a block of footnotes. */
+.footnotes::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7rem;
+  height: 1px;
+  background: var(--ink);
+}
+
+.footnotes li {
+  counter-increment: fn;
+  position: relative;
+  break-inside: avoid;
+  padding-left: 2.1rem;
+  margin-bottom: 1.75rem;
+  scroll-margin-top: 6rem;
+}
+
+.footnotes li::before {
+  content: counter(fn);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-variant-numeric: lining-nums;
+  color: var(--ink-2);
+}
+
+/* The footnote you jumped to gets a pencil tick in the gutter: ink, not
+   blue, because footnotes are the page's voice, not Copilot's. */
+.footnotes li:target {
+  box-shadow: -14px 0 0 -11px var(--muted);
+}
+
+.footnotes h3 {
+  font-size: 1.18rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 0.2rem;
+}
+
+.footnotes h3 .cmd {
+  font-size: 0.86em;
+}
+
+.footnotes p {
+  font-size: 1.04rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.fnback {
+  display: inline-block;
+  margin-left: 0.15rem;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 0 0.2rem;
+}
+
+/* ---------------------------------------------------------------------
+   Colophon
+   --------------------------------------------------------------------- */
+
+.colophon {
+  margin-top: 6rem;
+  padding-block: 3.25rem 3rem;
+  background: var(--paper-2);
+  border-top: 1px solid var(--rule);
+}
+
+.colophon-inner {
+  display: grid;
+  grid-template-columns: var(--cols);
+  column-gap: var(--gap);
+  row-gap: 1.75rem;
+}
+
+.colophon-brand {
+  grid-column: hang / margin;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  max-width: 34em;
+}
+
+.colophon-brand p {
+  text-wrap: balance;
+}
+
+.colophon-brand img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex: none;
+}
+
+.colophon-links {
+  grid-column: hang / -1;
+}
+
+.colophon-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  font-size: 1.05rem;
+}
+
+.socials {
+  grid-column: hang / -1;
+  justify-self: start;
+  display: flex;
+  flex-wrap: wrap;
+  margin: -0.75rem 0 0 -0.6rem;
+  gap: 0.25rem;
+}
+
+.socials a {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  transition: background-color 0.15s ease;
+}
+
+.socials a:hover {
+  background: var(--paper);
+}
+
+.socials img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.82;
+}
+
+@media (prefers-color-scheme: dark) {
+  .socials img {
+    filter: invert(1);
+  }
+}
+
+.colophon-small {
+  grid-column: hang / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule-strong);
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------
+   404
+   --------------------------------------------------------------------- */
+
+.lost {
+  padding-block: 4.5rem 2rem;
+  min-height: 60vh;
+}
+
+.lost .hero-intro {
+  grid-column: hang / margin;
+}
+
+.lost-mark {
+  margin: 0.4rem 0 0.6rem;
+  font-size: clamp(5rem, 3rem + 8vw, 10rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: lining-nums;
+  font-variation-settings: "opsz" 72;
+  color: var(--faint);
+}
+
+.lost-note {
+  grid-column: margin;
+  grid-row: 1;
+  align-self: end;
+  padding-bottom: 0.35rem;
+}
+
+main:has(.lost) + .colophon {
+  margin-top: 4rem;
+}
+
+/* A short page: the footer sits at the bottom of the window, not above a
+   band of empty paper. */
+body:has(.lost) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body:has(.lost) > main {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+main:has(.lost) + .colophon .colophon-small {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* No navigation on this page: the call to action goes to the right. */
+.brand + .cta {
+  margin-left: auto;
+}
+
+/* ---------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------- */
+
+/* Narrow desktop and tablets: same manuscript, tighter margins. */
+@media (max-width: 1180px) {
+  :root {
+    --hang: 3.75rem;
+    --margin: 15rem;
+    --gap: 2.25rem;
+  }
+}
+
+/* The navigation folds away before the masthead gets crowded. */
+@media (max-width: 1240px) {
+  .masthead-row {
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .menu-toggle[hidden] {
+    display: none;
+  }
+
+  .js:not(.enhanced) .menu-toggle[hidden] {
+    display: inline-flex;
+    visibility: hidden;
+  }
+
+  /* Without JS the links simply wrap onto their own rows, and the
+     masthead scrolls away with the page instead of keeping those rows
+     pinned over it. */
+  html:not(.js) .masthead {
+    position: static;
+  }
+
+  .site-nav {
+    order: 3;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .site-nav ul {
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+  }
+
+  .nav-out {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .js .site-nav {
+    display: none;
+  }
+
+  .js .nav-open .site-nav {
+    display: grid;
+    gap: 0;
+    padding: 0.5rem 0 0.75rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .js .nav-open .site-nav ul {
+    display: grid;
+    gap: 0;
+  }
+
+  .js .nav-open .site-nav a {
+    display: flex;
+    padding: 0.6rem 0;
+    font-size: 1.15rem;
+  }
+
+  .js .nav-open .nav-out {
+    margin-top: 0.4rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid var(--rule);
+  }
+}
+
+/* Phones and portrait tablets: one column, notes drop under the text. */
+@media (max-width: 860px) {
+  :root {
+    --pad: 1rem;
+    --gap: 0rem;
+    --cols: [hang text margin] minmax(0, 1fr);
+  }
+
+  body {
+    font-size: 1.0625rem;
+  }
+
+  .hero::after,
+  .chapter::after {
+    display: none;
+  }
+
+  .hero {
+    padding-block: 2.5rem 1.5rem;
+    row-gap: 1.75rem;
+  }
+
+  .hero-intro,
+  .hero-status {
+    grid-column: 1;
+  }
+
+  .hero-status {
+    grid-row: 2;
+  }
+
+  .proof--hero {
+    grid-row: 3;
+    grid-template-rows: none;
+    margin-top: 1rem;
+    --room: 100cqi;
+    /* Wide enough for "Ayer yo voy" on the first line, so the sentence
+       breaks before "al" rather than leaving "cine." on its own. */
+    --fs: min(5.2rem, calc(var(--room) / 6.2));
+  }
+
+  .specimen {
+    line-height: 1.45;
+  }
+
+  .proof--hero .specimen,
+  .proof--card .specimen {
+    margin-top: 0.2em;
+  }
+
+  .proof--hero > * {
+    grid-column: 1 !important;
+  }
+
+  .proof--hero > .note,
+  .proof--card > .note {
+    grid-row: auto;
+    max-width: 36rem;
+    margin-bottom: 1.25rem;
+    padding-left: 1rem;
+    border-left: 1.5px solid var(--blue);
+  }
+
+  .proof--hero .gloss {
+    margin-bottom: 1.5rem;
+  }
+
+  .lede {
+    font-size: 1.15rem;
+  }
+
+  .note-text {
+    font-size: 1.12rem;
+  }
+
+  .chapter {
+    padding-top: 4.5rem;
+  }
+
+  .chapter > *,
+  .steps > *,
+  .step > *,
+  .fact > *,
+  .sub > * {
+    grid-column: 1 !important;
+  }
+
+  .chapter-head {
+    margin-bottom: 2rem;
+  }
+
+  .chapter-aside {
+    margin: -0.75rem 0 1.75rem;
+  }
+
+  .sec {
+    position: static;
+    margin-right: 0.35em;
+  }
+
+  .subsec {
+    position: static;
+    margin-right: 0.45em;
+  }
+
+  .steps {
+    gap: 2.25rem;
+  }
+
+  .step {
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .step::before {
+    grid-column: 1 !important;
+    justify-self: start;
+    font-size: 2.2rem;
+  }
+
+  .step > .step-body,
+  .step > .margin-note {
+    grid-column: 2 !important;
+  }
+
+  .step > .margin-note {
+    grid-row: 2;
+    padding-top: 0.6rem;
+  }
+
+  .step h3 {
+    font-size: 1.35rem;
+  }
+
+  .fact {
+    grid-template-rows: none;
+  }
+
+  .fact > dt,
+  .fact > dd,
+  .fact > dd.margin-note {
+    grid-row: auto;
+  }
+
+  .fact > dd.margin-note {
+    padding-top: 0.55rem;
+  }
+
+  .plate {
+    margin-inline: calc(var(--pad) * -0.25);
+    margin-bottom: 2.25rem;
+  }
+
+  .card {
+    padding: 1.35rem 1.15rem 1.35rem;
+  }
+
+  .proof--card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    --room: 100cqi;
+    --fs: clamp(var(--fs-min, 2.2rem), calc(var(--room) / var(--len, 10.4)), 3.6rem);
+  }
+
+  .proof--wide {
+    --fs: clamp(2rem, calc(var(--room) / 9.6), 3.4rem);
+  }
+
+  .proof--card > *,
+  .proof--wide > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  .proof--card .ins {
+    font-size: max(0.4em, 0.95rem);
+  }
+
+  .proof--card .caret .ins {
+    font-size: max(0.52em, 1.2rem);
+  }
+
+  .proof--card .mk-caret path {
+    stroke-width: 5.2;
+  }
+
+  .proof--card > .note {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+  }
+
+  .proof--wide > .proof-label--act {
+    margin-top: 0.75rem;
+  }
+
+  .sayit,
+  .opt {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sayit > *,
+  .ideas > .plate-caption {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  .ideas > .plate-caption {
+    margin: 1.1rem 0 0;
+  }
+
+  /* On a phone, the card's header row is the app's: the label, Report and
+     the cross; the title goes under it. */
+  .card-title {
+    order: 3;
+    flex-basis: 100%;
+    margin-top: 0.35rem;
+  }
+
+  .opt-gloss {
+    padding-left: 2.1rem;
+    margin-top: 0.2rem;
+    font-size: 1.05rem;
+  }
+
+  .source-line {
+    margin-bottom: 1.1rem;
+  }
+
+  .composer-draft {
+    font-size: 0.95rem;
+    text-overflow: ellipsis;
+  }
+
+  .ledger-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .plans-aside {
+    padding-top: 0;
+    margin-bottom: 2.25rem;
+  }
+
+  .plan-table tbody th {
+    width: 30%;
+    font-size: 1.08rem;
+  }
+
+  .plan-table tbody td {
+    font-size: 1rem;
+  }
+
+  .sub {
+    margin-bottom: 3rem;
+  }
+
+  .sub > h3 {
+    font-size: 1.45rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .sub-notes {
+    grid-row: auto;
+    margin-top: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .sheet-card {
+    padding: 1.3rem 1.15rem 1.15rem;
+  }
+
+  .sends th,
+  .sends td {
+    display: block;
+    width: auto;
+    padding-right: 0;
+  }
+
+  .sends th {
+    padding-bottom: 0.3rem;
+    border-bottom: 0;
+  }
+
+  .sends td {
+    padding-top: 0;
+  }
+
+  .ledger > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .entry-line {
+    display: grid;
+    grid-template-columns: minmax(1.5rem, 1fr) auto;
+    align-items: end;
+    column-gap: 0.6rem;
+    row-gap: 0.4rem;
+  }
+
+  .entry-title {
+    grid-column: 1 / -1;
+    font-size: 1.35rem;
+  }
+
+  .status {
+    width: auto;
+    min-width: 0;
+    font-size: 0.95rem;
+  }
+
+  .entry-desc {
+    max-width: 34em;
+  }
+
+  .leader {
+    transform: translateY(-0.3rem);
+  }
+
+  .margin-note--beside {
+    grid-row: auto !important;
+    margin-top: 1.25rem;
+  }
+
+  .footnotes {
+    columns: 1;
+  }
+
+  .colophon {
+    margin-top: 4rem;
+  }
+
+  .colophon-inner > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  .colophon-brand {
+    align-items: flex-start;
+    font-size: 1.1rem;
+  }
+
+  .socials {
+    margin-left: -0.45rem;
+    gap: 0.2rem;
+  }
+
+  .socials a {
+    width: 2.3rem;
+    height: 2.3rem;
+  }
+
+  .colophon-small {
+    flex-direction: column;
+  }
+
+  .lost {
+    padding-block: 2.5rem 1rem;
+    row-gap: 1.5rem;
+    min-height: 0;
+  }
+
+  .lost .hero-intro,
+  .lost-note {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .masthead-row {
+    padding-block: 0.7rem;
+    gap: 0.6rem 0.6rem;
+  }
+
+  /* The product is "LangX Copilot", never a bare "Copilot", so the
+     wordmark stays; the mark, the type and the gaps shrink instead. */
+  .brand {
+    font-size: 1.08rem;
+    gap: 0.3rem;
+  }
+
+  .brand-mark {
+    gap: 0.4rem;
+  }
+
+  .brand-mark img {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+  }
+
+  .cta {
+    padding: 0.48rem 0.6rem 0.52rem;
+    font-size: 0.9rem;
+  }
+
+  .menu-toggle {
+    padding: 0.45rem 0.15rem 0.45rem 0.35rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .ui-btn {
+    padding-inline: 0.6rem;
+  }
+}
+
+/* Only on the narrowest phones does the word "Menu" give way to the
+   three-line glyph alone (it stays the button's name for screen readers),
+   and everything in the row gets a little smaller so it stays one row. */
+@media (max-width: 374px) {
+  .menu-toggle-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
+@media (max-width: 349px) {
+  .masthead-row {
+    gap: 0.5rem;
+  }
+
+  .brand {
+    font-size: 1rem;
+  }
+
+  .brand-mark img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .cta {
+    padding-inline: 0.5rem;
+    font-size: 0.86rem;
+  }
+}
+
+@media print {
+  .masthead,
+  .replay,
+  .connector {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .motion .proof.play,
+  .motion .proof.play * {
+    animation: none !important;
+  }
+}
