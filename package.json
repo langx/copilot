@@ -50,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/langx/copilot/issues"
   },
-  "homepage": "https://github.com/langx/copilot#readme",
+  "homepage": "https://copilot.langx.io",
   "dependencies": {
     "@discordjs/rest": "^2.3.0",
     "discord-api-types": "^0.37.84",

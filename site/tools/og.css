@@ -1,0 +1,256 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  width: 1200px;
+  height: 630px;
+  overflow: hidden;
+}
+body {
+  position: relative;
+  background-color: #faf7f0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  color: #17191c;
+  font-family: "Newsreader", Georgia, serif;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 64px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-rows: auto auto 1fr auto;
+  column-gap: 56px;
+}
+/* The social preview of copilot.langx.io (images/site-preview.png).
+   Kept out of the page itself so that og-source.html runs under the site's
+   own Content-Security-Policy: no inline style, no inline script. */
+
+/* The margin rule. */
+body::after {
+  content: "";
+  position: absolute;
+  top: 230px;
+  bottom: 64px;
+  right: calc(64px + 300px + 28px);
+  width: 1px;
+  background: #e6dfcf;
+}
+.mono {
+  font-family: "Courier Prime", "Courier New", monospace;
+}
+.top {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 31px;
+  line-height: 1;
+}
+.brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+}
+.brand b {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.brand .slash {
+  color: #b9b2a2;
+  font-weight: 300;
+}
+.brand i {
+  font-weight: 450;
+}
+.url {
+  font-size: 19px;
+  color: #62676d;
+}
+h1 {
+  grid-column: 1 / -1;
+  margin-top: 26px;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  font-variation-settings: "opsz" 72;
+}
+.proof {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: start;
+  margin-top: 34px;
+  position: relative;
+}
+.label {
+  font-size: 17px;
+  color: #62676d;
+}
+.label--fix {
+  color: #007f59;
+}
+.specimen {
+  margin-top: 4px;
+  font-size: 78px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  word-spacing: 0.1em;
+  font-variation-settings: "opsz" 72;
+  white-space: nowrap;
+}
+.w {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+.w-del > .g {
+  color: #85806f;
+}
+.mk {
+  position: absolute;
+  overflow: visible;
+  fill: none;
+  stroke: #009f70;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mk path {
+  stroke-width: 3.4;
+}
+.mk-strike {
+  left: -0.05em;
+  width: calc(100% + 0.1em);
+  top: 0.39em;
+  height: 0.19em;
+}
+.mk-dele {
+  left: calc(100% + 0.02em);
+  top: 0.22em;
+  width: 0.2em;
+  height: 0.34em;
+}
+.mk-dele path {
+  stroke-width: 3.2;
+}
+.ins {
+  position: absolute;
+  left: 50%;
+  top: -1.02em;
+  transform: translateX(-50%);
+  font-size: 0.4em;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #007f59;
+}
+.corrected {
+  margin-top: 2px;
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 450;
+  color: #009f70;
+  letter-spacing: -0.012em;
+}
+/* Below the line of the sentence, so the connector rises into the
+   mark from underneath instead of crossing the words. */
+.note {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: end;
+  margin-bottom: 24px;
+  color: #2a54d0;
+}
+.note-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px 6px 10px;
+  border-radius: 999px;
+  background: #e9f0fe;
+  color: #2a54d0;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pill svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: #3b6cf6;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.note-title {
+  font-size: 21px;
+  font-weight: 600;
+}
+.note-text {
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.4;
+  font-variation-settings: "opsz" 24;
+}
+.connector {
+  position: absolute;
+  inset: 0;
+  width: 1200px;
+  height: 630px;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: #3b6cf6;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  z-index: 2;
+}
+.connector circle {
+  fill: #3b6cf6;
+  stroke: none;
+}
+.foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  border-top: 1px solid #d5cbb5;
+  font-size: 19px;
+  color: #33363b;
+}
+.foot .dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: #17191c;
+  transform: translateY(-1px);
+}
+.foot b {
+  font-weight: 600;
+}
+.foot .mono {
+  font-size: 17px;
+  color: #62676d;
+}
+/* The second line of the tagline, in italic: the page's own voice, in ink.
+   No yellow here: on LangX, yellow is kept for the one button that commits. */
+.hl {
+  font-style: italic;
+}

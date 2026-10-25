@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LangX Copilot: AI help inside your LangX chats</title>
+    <meta
+      name="description"
+      content="LangX Copilot is an AI helper inside LangX chats, in beta. It checks a sentence, helps you say it in the language you are learning, explains a message or a correction, and suggests replies. Nothing is sent unless you send it."
+    />
+    <link rel="canonical" href="https://copilot.langx.io/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#faf7f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1f24" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="icon" href="favicon.ico" sizes="16x16 32x32" />
+    <link rel="icon" type="image/svg+xml" href="images/mark.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LangX" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://copilot.langx.io/" />
+    <meta property="og:title" content="LangX Copilot: AI help inside your LangX chats" />
+    <meta
+      property="og:description"
+      content="Check a sentence, say it in the language you are learning, understand a message or a correction, and get reply ideas. A beta, on Free and Pro. Nothing is sent unless you send it."
+    />
+    <meta property="og:image" content="https://copilot.langx.io/images/site-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Spanish sentence “Ayer yo voy al cine.” marked up in green as a partner’s correction, “Ayer fui al cine.”, with Copilot’s explanation beside it as a blue margin note."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@langx_io" />
+    <meta name="twitter:title" content="LangX Copilot: AI help inside your LangX chats" />
+    <meta
+      name="twitter:description"
+      content="Check a sentence, say it in the language you are learning, understand a message or a correction, and get reply ideas. A beta, on Free and Pro. Nothing is sent unless you send it."
+    />
+    <meta name="twitter:image" content="https://copilot.langx.io/images/site-preview.png" />
+    <meta
+      name="twitter:image:alt"
+      content="The Spanish sentence “Ayer yo voy al cine.” marked up in green as a partner’s correction, “Ayer fui al cine.”, with Copilot’s explanation beside it as a blue margin note."
+    />
+
+    <!--
+      Motion is opt-in twice over: the "motion" class is only added when JS runs
+      and the visitor has not asked for reduced motion. Without it, every mark,
+      correction and note is drawn in its final state from the first paint.
+      The marking-up waits for the web fonts, so the words do not move under
+      the pen ("fonts-ready"; at most 2.5 s).
+      "js" lets the layout prepare for main.js without a flash. main.js adds
+      "enhanced" once the menu works; if it never does (blocked, 404, an
+      error), "js" is taken off again at load and the page falls back to the
+      no-JS layout, with the navigation as a row.
+      This script is hashed in _headers (Content-Security-Policy). Change one
+      character and the hash there must change too, or the browser refuses it
+      and the page quietly falls back to the no-JS layout.
+    -->
+    <script>
+      (function (root) {
+        root.classList.add("js");
+        try {
+          if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            root.classList.add("motion");
+          }
+        } catch (e) {}
+        var ready = function () {
+          root.classList.add("fonts-ready");
+        };
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(ready, ready);
+          setTimeout(ready, 2500);
+        } else {
+          ready();
+        }
+        window.addEventListener("load", function () {
+          if (!root.classList.contains("enhanced")) root.classList.remove("js");
+        });
+      })(document.documentElement);
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,300..600&display=swap"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://langx.io/#organization",
+            "name": "LangX",
+            "url": "https://langx.io/",
+            "logo": "https://copilot.langx.io/images/apple-touch-icon.png",
+            "sameAs": [
+              "https://github.com/langx",
+              "https://x.com/langx_io",
+              "https://www.facebook.com/langxapp",
+              "https://www.youtube.com/@langxapp",
+              "https://tiktok.com/@langxapp",
+              "https://bsky.app/profile/langx.io",
+              "https://t.me/languageXapp",
+              "https://discord.langx.io"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://copilot.langx.io/#website",
+            "url": "https://copilot.langx.io/",
+            "name": "LangX Copilot",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://langx.io/#organization" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://copilot.langx.io/#webpage",
+            "url": "https://copilot.langx.io/",
+            "name": "LangX Copilot: AI help inside your LangX chats",
+            "description": "LangX Copilot is an AI helper inside LangX chats, in beta. It checks a sentence, helps you say it in the language you are learning, explains a message or a correction, and suggests replies. Nothing is sent unless you send it.",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://copilot.langx.io/#website" },
+            "about": { "@id": "https://copilot.langx.io/#copilot" },
+            "primaryImageOfPage": "https://copilot.langx.io/images/site-preview.png"
+          },
+          {
+            "@type": "Service",
+            "@id": "https://copilot.langx.io/#copilot",
+            "name": "LangX Copilot",
+            "url": "https://copilot.langx.io/",
+            "description": "An AI helper inside LangX chats, in beta: Check my sentence, Say it, Explain and Reply ideas. It never sends a message for you.",
+            "serviceType": "AI writing help inside language-exchange chats",
+            "provider": { "@id": "https://langx.io/#organization" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://copilot.langx.io/#faq",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://copilot.langx.io/#webpage" },
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is Copilot a person, a tutor or a chatbot?",
+                "acceptedAnswer": { "@type": "Answer", "text": "None of those. Copilot is an AI writing aid inside a chat with a real person. It does not talk with you: you tap one of its four helps, and it answers that one question. AI can be wrong, so treat every answer as a suggestion." }
+              },
+              {
+                "@type": "Question",
+                "name": "Does Copilot ever send a message for me?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Nothing reaches the other person unless you send it yourself. “Use this”, a way to say it and a reply idea only fill your message box." }
+              },
+              {
+                "@type": "Question",
+                "name": "How long can my message be?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Check my sentence takes a chat-length sentence, and Say it a chat line, not a paragraph. When a draft is too long for a help, that help is left out of the Copilot menu." }
+              },
+              {
+                "@type": "Question",
+                "name": "Which languages does it work in?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Copilot explains in your app language: English, Turkish, Spanish, Russian, Arabic, French, German or Brazilian Portuguese. Check my sentence checks the language you wrote in, Say it writes in the language you are learning, and reply ideas come in the language of the chat. Its answers can be wrong in any language." }
+              },
+              {
+                "@type": "Question",
+                "name": "What is sent to the AI, and to whom?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Nothing until you agree, and then only when you tap a Copilot button. The text you asked about goes to Anthropic, the company that runs the AI model, with your languages and levels. For Explain that can be a message your partner wrote, and for reply ideas the last few messages in the chat. Your name, email, photos and voice notes are never sent. Section 2.6 of the LangX privacy policy has the details." }
+              },
+              {
+                "@type": "Question",
+                "name": "Why don’t I see Copilot?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It appears inside a conversation you already have, not on the screen that starts a new one, and not in a chat with an account that takes no messages, such as @langx. The Copilot button shows once you have typed something. Guest accounts and accounts with an unverified email can’t use it. It is a beta, and we may switch it off for everyone at any time." }
+              },
+              {
+                "@type": "Question",
+                "name": "What if an answer is wrong?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Keep your own words, and tap Report in the corner of the answer. The LangX team sees the answer and which help wrote it. For Check my sentence and Say it, you can choose to send what you wrote too." }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need Pro?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Any signed-in account with a verified email can use Copilot, on Free and on Pro. Both plans have a daily allowance of answers, and Pro’s is larger. The app shows how many are left. On both plans, Copilot is a beta." }
+              },
+              {
+                "@type": "Question",
+                "name": "Can my partner see that I used Copilot?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Your partner sees none of your Copilot answers. What you send is your own message, whether or not Copilot helped with it." }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I turn Copilot off?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Settings → Privacy → Copilot. Turning it off withdraws your consent: nothing more of yours goes to the AI provider, and Copilot asks again the next time you use it. If you can’t see that row, write to hi@langx.io." }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I chat with @copilot?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. The @copilot account is closed and does not take messages. Copilot works inside your chats with people, not in a chat of its own." }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- The app's own glyphs (Feather, MIT), drawn once and reused. -->
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4 12 14.01l-3-3" /></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z" /></symbol>
+      <symbol id="i-slash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="m4.93 4.93 14.14 14.14" /></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" /></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7" /></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></symbol>
+      <symbol id="i-out" viewBox="0 0 10 10"><path d="M3 1.5h5.5V7M8.3 1.7 1.5 8.5" /></symbol>
+    </svg>
+
+    <header class="masthead" id="top">
+      <div class="masthead-row">
+        <p class="brand">
+          <a class="brand-mark" href="https://langx.io" target="_blank" rel="noopener noreferrer">
+            <img src="images/mark.svg" width="30" height="30" alt="LangX" />
+            <span class="brand-langx" aria-hidden="true">LangX</span>
+            <span class="sr-only"> (opens in a new tab)</span>
+          </a>
+          <span class="brand-slash" aria-hidden="true">/</span>
+          <a class="brand-product" href="#main">Copilot</a>
+        </p>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
+          <span class="menu-toggle-label">Menu</span>
+          <svg viewBox="0 0 20 14" width="20" height="14" aria-hidden="true"><path d="M1 1.5h18M1 7h18M1 12.5h18" /></svg>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Site">
+          <ul class="nav-sections" role="list">
+            <li><a href="#check">What it does</a></li>
+            <li><a href="#use">How to use it</a></li>
+            <li><a href="#plans">Plans</a></li>
+            <li><a href="#privacy">Privacy</a></li>
+            <li><a href="#status">Status</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+          <ul class="nav-out" role="list">
+            <li><a href="https://langx.io" target="_blank" rel="noopener noreferrer">LangX<svg class="out" aria-hidden="true"><use href="#i-out" /></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://token.langx.io" target="_blank" rel="noopener noreferrer">Token<svg class="out" aria-hidden="true"><use href="#i-out" /></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://github.com/langx/langx" target="_blank" rel="noopener noreferrer">GitHub<svg class="out" aria-hidden="true"><use href="#i-out" /></svg><span class="sr-only"> (opens in a new tab)</span></a></li>
+          </ul>
+        </nav>
+
+        <a class="cta" href="https://get.langx.io" target="_blank" rel="noopener noreferrer">Get the app<span class="sr-only"> (opens in a new tab)</span></a>
+      </div>
+    </header>
+
+    <main id="main" class="shell">
+      <!-- ============ Hero: a correction, explained ============ -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-intro">
+          <h1 id="hero-title">An AI helper inside your LangX chats. It never sends a word for you.</h1>
+          <p class="lede">
+            LangX Copilot checks a sentence before you send it, helps you say
+            something in the language you are learning, explains a message or a
+            correction, and suggests replies. You ask with a tap.<a class="fnref" href="#fn-person" id="ref-person" aria-label="Footnote 1">1</a>
+            The answer comes back in blue, for you to use, change or ignore.
+          </p>
+          <p class="hero-links">
+            <a href="#check">See what it does</a>
+            <a href="#privacy">What is sent, and to whom</a>
+          </p>
+        </div>
+
+        <!-- The page's own voice, so ink, not the blue pill that marks an
+             answer from Copilot. Same badge as the status board in §8. -->
+        <div class="hero-status" role="group" aria-label="Copilot’s status">
+          <p class="hero-badge"><span class="dot dot-live" aria-hidden="true"></span>Beta</p>
+          <p><span><strong>In the LangX app now</strong>, on Free and Pro</span></p>
+        </div>
+
+        <figure class="proof proof--hero play" data-proof>
+          <p class="sr-only">
+            <span>Illustration. You wrote: </span><span lang="es">Ayer yo voy al cine.</span>
+            <span> Lucía corrected it to: </span><span lang="es">Ayer fui al cine.</span>
+            <span> In English: I went to the cinema yesterday.</span>
+          </p>
+          <p class="proof-label" aria-hidden="true">You wrote</p>
+          <p class="specimen" lang="es" aria-hidden="true">
+            <span class="w"><span class="g">Ayer</span></span>
+            <span class="w w-del" style="--d: 0.6s"><span class="g">yo</span><svg class="mk mk-strike" viewBox="0 0 100 20" preserveAspectRatio="none"><path pathLength="1" d="M2 12.6C30 10 66 11.4 98 7" /></svg><svg class="mk mk-dele" viewBox="0 0 20 34"><path pathLength="1" d="M1 23.6C5 23 10 20 13.5 15C16.5 10.5 16.5 3 13 3.3C9.5 3.6 9.5 10 12 15C13.8 18.6 15.5 21 17.5 23.5" /></svg></span>
+            <span class="w w-del" style="--d: 1.35s"><span class="g">voy</span><svg class="mk mk-strike" data-anchor viewBox="0 0 100 20" preserveAspectRatio="none"><path pathLength="1" d="M2 13.2C26 9.5 62 11.6 98 6.4" /></svg><span class="ins">fui</span></span>
+            <span class="w"><span class="g">al</span></span>
+            <span class="w"><span class="g">cine.</span></span>
+          </p>
+          <p class="proof-label proof-label--fix" aria-hidden="true">Lucía corrected it</p>
+          <p class="corrected" lang="es" aria-hidden="true">Ayer fui al cine.</p>
+          <p class="gloss" aria-hidden="true">“I went to the cinema yesterday.”</p>
+          <div class="note" role="note" aria-label="Copilot’s explanation of the correction">
+            <p class="note-label note-head"><span class="pill"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Copilot · Beta</span><span class="note-title">Explained</span></p>
+            <p class="note-text">
+              “<span lang="es">Ayer</span>” (yesterday) puts this in the past, so
+              “<span lang="es">voy</span>” (I&nbsp;go) becomes “<span lang="es">fui</span>”
+              (I&nbsp;went). “<span lang="es">Yo</span>” can go, because
+              “<span lang="es">fui</span>” already says who.
+            </p>
+          </div>
+          <figcaption>
+            An illustration, not real output. Lucía corrected your Spanish in
+            the chat, in green, the colour of a correction from a person. You
+            pressed and held her correction and chose “Explain”. Copilot’s
+            answer is blue, and it explains her change without offering one of
+            its own.
+            <button class="replay" type="button" hidden>Mark it up again</button>
+          </figcaption>
+          <svg class="connector" aria-hidden="true" focusable="false"></svg>
+        </figure>
+      </section>
+
+      <!-- ============ §1 Check my sentence ============ -->
+      <section class="chapter" id="check" aria-labelledby="check-title">
+        <header class="chapter-head">
+          <p class="part" aria-hidden="true">What it does: four helps</p>
+          <h2 id="check-title"><span class="sec" aria-hidden="true">§1</span>Check my sentence</h2>
+          <p class="chapter-lede">
+            Before you send a message, ask whether it is right. Copilot checks
+            it in the language you wrote it in and makes the smallest correction
+            that fixes it.
+          </p>
+        </header>
+
+        <div class="card plate">
+          <figure class="proof proof--card" data-proof style="--len: 13.4">
+            <p class="proof-kind">Illustration, not real output</p>
+            <p class="sr-only">
+              <span>Your draft: </span><span lang="es">Me gusta mucho los perros.</span>
+              <span> Copilot’s check: </span><span lang="es">Me gustan mucho los perros.</span>
+            </p>
+            <p class="proof-label" aria-hidden="true">Your draft</p>
+            <p class="specimen" lang="es" aria-hidden="true">
+              <span class="w"><span class="g">Me</span></span>
+              <span class="w"><span class="g">gusta</span><span class="caret" style="--d: 0.25s"><svg class="mk mk--blue mk-caret" data-anchor viewBox="0 0 30 26"><path pathLength="1" d="M3 23.5C8 16 11.5 9 15 2.5C18.5 9 22 16 27 23.5" /></svg><span class="ins ins--blue">n</span></span></span>
+              <span class="w"><span class="g">mucho</span></span>
+              <span class="w"><span class="g">los</span></span>
+              <span class="w"><span class="g">perros.</span></span>
+            </p>
+            <p class="proof-label proof-label--copilot" aria-hidden="true">Copilot’s check</p>
+            <p class="corrected corrected--copilot" lang="es" aria-hidden="true">Me <b class="chg">gustan</b> mucho los perros.</p>
+            <div class="ui-row" aria-hidden="true">
+              <span class="ui-btn">Use this</span>
+              <span class="ui-btn">Keep mine</span>
+            </div>
+            <div class="note" role="note" aria-label="Copilot’s reason">
+              <p class="note-label note-head"><span class="pill"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Copilot · Beta</span></p>
+              <p class="note-text">With a plural like “<span lang="es">los perros</span>”, the verb is “<span lang="es">gustan</span>”, not “<span lang="es">gusta</span>”.</p>
+            </div>
+            <svg class="connector" aria-hidden="true" focusable="false"></svg>
+          </figure>
+        </div>
+
+        <dl class="facts">
+          <div class="fact">
+            <dt>Where it is</dt>
+              <dd>Type your message, tap the blue Copilot button beside Send, and choose “Check my sentence”.</dd>
+            <dd class="margin-note">A chat-length sentence, not a long text.</dd>
+          </div>
+          <div class="fact">
+            <dt>What comes back</dt>
+              <dd>
+                A blue card above the message box, never in the chat: your
+                sentence with the changed words in blue, and one short reason in
+                your app language. It keeps your meaning, tone and register, and
+                does not rewrite for style or translate. If nothing needs to
+                change, it says “Looks good.”
+              </dd>
+            <dd class="margin-note">Blue, not green. In LangX, green is kept for a correction from a person.</dd>
+          </div>
+          <div class="fact">
+            <dt>Then</dt>
+              <dd>“Use this” puts the corrected sentence in your message. “Keep mine” closes the card. Neither one sends.</dd>
+            <dd class="margin-note">The two buttons are the same size on purpose: taking the machine’s word must not be easier than keeping your own.<a class="fnref" href="#fn-send" id="ref-send" aria-label="Footnote 2">2</a></dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============ §2 Say it in {language} ============ -->
+      <section class="chapter" id="say-it" aria-labelledby="sayit-title">
+        <header class="chapter-head">
+          <h2 id="sayit-title"><span class="sec" aria-hidden="true">§2</span>Say it in <span class="slot">Spanish</span></h2>
+          <p class="chapter-lede">
+            Write what you want to say in your own language, and get up to three
+            ways to say it in the language you are learning, at your level.
+          </p>
+        </header>
+        <p class="margin-note chapter-aside">On screen, the row names the language you are learning. Here, that is Spanish.</p>
+
+        <div class="card plate">
+          <figure class="sayit">
+            <p class="proof-kind">Illustration, not real output</p>
+            <p class="proof-label">You wrote, in English</p>
+            <p class="source-line" lang="en">Can we talk tomorrow instead?</p>
+            <p class="card-head">
+              <span class="pill"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Copilot · Beta</span>
+              <span class="card-title">Ways to say it</span>
+              <span class="card-acts" aria-hidden="true"><span class="ui-inline"><svg class="ic"><use href="#i-flag" /></svg>Report</span><svg class="ic card-x"><use href="#i-x" /></svg></span>
+            </p>
+            <ol class="options" role="list">
+              <li class="opt"><span class="opt-text" lang="es">¿Y si mejor hablamos mañana?</span><span class="opt-gloss">casual</span></li>
+              <li class="opt"><span class="opt-text" lang="es">¿Podríamos hablar mañana, mejor?</span><span class="opt-gloss">more polite</span></li>
+              <li class="opt"><span class="opt-text" lang="es">¿Mejor mañana?</span><span class="opt-gloss">shorter</span></li>
+            </ol>
+            <figcaption class="plate-caption">Each option comes with a few words in your app language on how it differs. Tap one and it goes into your message.</figcaption>
+          </figure>
+        </div>
+
+        <dl class="facts">
+          <div class="fact">
+            <dt>Where it is</dt>
+              <dd>
+                Type it in the message box, tap the Copilot button and choose
+                “Say it in Spanish”. The row picks the first language you are
+                learning that your partner speaks natively, or else the first
+                one you are learning.
+              </dd>
+            <dd class="margin-note">A chat line, not a paragraph. If you are not learning a language, there is no row.<a class="fnref" href="#fn-long" id="ref-long" aria-label="Footnote 3">3</a></dd>
+          </div>
+          <div class="fact">
+            <dt>What comes back</dt>
+              <dd>
+                A card headed “Ways to say it”: up to three short sentences, each
+                with a few words in your app language on how it differs, such as
+                casual, polite or shorter. It keeps your meaning and adds nothing
+                you didn’t say.
+              </dd>
+            <dd class="margin-note">Say it sends your line and your language settings, never the chat, and nothing about your partner.</dd>
+          </div>
+          <div class="fact">
+            <dt>Then</dt>
+              <dd>Tap an option and it goes into your message, to change or to send. Nothing is sent.</dd>
+            <dd class="margin-note">Copilot explains in your app language; the options come in the language you are learning.<a class="fnref" href="#fn-languages" id="ref-languages" aria-label="Footnote 4">4</a></dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============ §3 Explain ============ -->
+      <section class="chapter" id="explain" aria-labelledby="explain-title">
+        <header class="chapter-head">
+          <h2 id="explain-title"><span class="sec" aria-hidden="true">§3</span>Explain</h2>
+          <p class="chapter-lede">
+            Ask what a message means, or what a correction changed and why. The
+            answer is at most three short sentences, in your app language.
+          </p>
+        </header>
+
+        <div class="card plate">
+          <figure class="proof proof--card proof--wide" data-proof style="--len: 15.2">
+            <p class="proof-kind">Illustration, not real output</p>
+            <p class="sr-only"><span>Lucía wrote: </span><span lang="es">¡Qué guay! Nos vemos el finde.</span></p>
+            <p class="proof-label" aria-hidden="true">Lucía wrote</p>
+            <p class="specimen specimen--message" lang="es" aria-hidden="true">
+              <span class="w"><span class="g">¡Qué</span></span>
+              <span class="w"><span class="g">guay</span><svg class="mk mk--blue mk-under" data-anchor style="--d: 0.2s" viewBox="0 0 100 12" preserveAspectRatio="none"><path pathLength="1" d="M2 6.5C18 3.2 34 8.6 52 5.4C68 2.8 84 7.6 98 4.6" /></svg></span><span class="w"><span class="g">!</span></span>
+              <span class="w"><span class="g">Nos</span></span>
+              <span class="w"><span class="g">vemos</span></span>
+              <span class="w"><span class="g">el</span></span>
+              <span class="w"><span class="g">finde</span><svg class="mk mk--blue mk-under" style="--d: 0.55s" viewBox="0 0 100 12" preserveAspectRatio="none"><path pathLength="1" d="M2 5.2C20 8 38 3 56 6.2C72 8.8 86 3.6 98 5.6" /></svg></span><span class="w"><span class="g">.</span></span>
+            </p>
+            <p class="proof-label proof-label--act" aria-hidden="true">You pressed and held it, and chose “Explain”.</p>
+            <div class="note" role="note" aria-label="Copilot’s explanation of the message">
+              <p class="note-label note-head"><span class="pill"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Copilot · Beta</span><span class="note-title">Explained</span></p>
+              <p class="note-text">
+                “<span lang="es">Guay</span>” is casual Spanish from Spain for
+                cool. “<span lang="es">Finde</span>” is short for
+                “<span lang="es">fin de semana</span>”, the weekend. So: “How
+                cool! See you at the weekend.”
+              </p>
+            </div>
+            <svg class="connector" aria-hidden="true" focusable="false"></svg>
+          </figure>
+        </div>
+
+        <dl class="facts">
+          <div class="fact">
+            <dt>Where it is</dt>
+              <dd>
+                Press and hold your partner’s message, or a correction from
+                either of you, and choose “Explain”. With the message box empty,
+                an Explain chip beside Correct, Translate and Echo does the same
+                for their latest message.
+              </dd>
+            <dd class="margin-note">Not for your own messages, voice notes, photos, view-once messages or messages deleted for everyone.</dd>
+          </div>
+          <div class="fact">
+            <dt>What comes back</dt>
+              <dd>
+                A sheet titled “Explained”, over the chat, never in it. For a
+                message: what it means, and any idiom, slang, abbreviation or
+                grammar a learner might miss. For a correction: what it changed
+                and why.
+              </dd>
+            <dd class="margin-note">It explains a person’s correction as given. It never offers a different one, and never judges whether the corrector was right.</dd>
+          </div>
+          <div class="fact">
+            <dt>Then</dt>
+              <dd>Close it with “Close”, or tap outside the sheet.</dd>
+            <dd class="margin-note">It doesn’t suggest a reply, and doesn’t judge the writer.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============ §4 Reply ideas ============ -->
+      <section class="chapter" id="reply-ideas" aria-labelledby="ideas-title">
+        <header class="chapter-head">
+          <h2 id="ideas-title"><span class="sec" aria-hidden="true">§4</span>Reply ideas</h2>
+          <p class="chapter-lede">
+            When your partner’s newest message is still waiting for an answer,
+            ask for a few ideas. Pick one, change it and send it yourself, or
+            write your own.
+          </p>
+        </header>
+
+        <div class="card plate">
+          <figure class="sayit ideas">
+            <p class="proof-kind">Illustration, not real output</p>
+            <p class="proof-label">Lucía wrote, and it is your turn</p>
+            <p class="source-line" lang="es">¿Y tú qué haces este finde?</p>
+            <p class="chip-line" aria-hidden="true"><span class="pill pill--chip"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Reply ideas</span></p>
+            <p class="card-head">
+              <span class="pill"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Copilot · Beta</span>
+              <span class="card-title">Reply ideas</span>
+              <span class="card-acts" aria-hidden="true"><span class="ui-inline"><svg class="ic"><use href="#i-flag" /></svg>Report</span><svg class="ic card-x"><use href="#i-x" /></svg></span>
+            </p>
+            <ol class="options" role="list">
+              <li class="opt"><span class="opt-text" lang="es">Voy a la playa con unos amigos.</span></li>
+              <li class="opt"><span class="opt-text" lang="es">Todavía no lo sé. ¿Y tú?</span></li>
+              <li class="opt"><span class="opt-text" lang="es">Nada especial. Me quedo en casa.</span></li>
+            </ol>
+            <figcaption class="plate-caption">Up to three, in the language of the chat. Tap one and it goes into your message. Nothing is sent.</figcaption>
+          </figure>
+        </div>
+
+        <dl class="facts">
+          <div class="fact">
+            <dt>Where it is</dt>
+              <dd>
+                A small blue “Reply ideas” chip above the empty message box. It
+                shows only when their newest message is text and still
+                unanswered, and nothing is asked until you tap it.
+              </dd>
+            <dd class="margin-note">Never offered unprompted, and never an auto-reply.</dd>
+          </div>
+          <div class="fact">
+            <dt>What comes back</dt>
+              <dd>
+                A card headed “Reply ideas” with up to three short replies, one
+                or two sentences each, in the language of the chat and at your
+                level. They never speak for your partner.
+              </dd>
+            <dd class="margin-note">To write them, Copilot reads the last few messages in the chat, from both of you.<a class="fnref" href="#fn-sent" id="ref-sent" aria-label="Footnote 5">5</a></dd>
+          </div>
+          <div class="fact">
+            <dt>Then</dt>
+              <dd>Tap an idea and it goes into your message. Change it, or don’t. Then send it yourself.</dd>
+            <dd class="margin-note">Ideas for a message are kept while the app is open, so opening them again costs nothing.</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============ §5 How to use it ============ -->
+      <section class="chapter" id="use" aria-labelledby="use-title">
+        <header class="chapter-head">
+          <h2 id="use-title"><span class="sec" aria-hidden="true">§5</span>How to use it</h2>
+          <p class="chapter-lede">
+            Four steps, all inside the app. The third one you do the first
+            time, and again if you turn Copilot off or the sheet changes.
+          </p>
+        </header>
+
+        <ol class="steps" role="list">
+          <li class="step">
+            <div class="step-body">
+              <h3>Open a chat</h3>
+              <p>
+                Copilot works inside a conversation you already have in the
+                LangX app. It is not on the screen that starts a new chat.
+              </p>
+            </div>
+            <p class="margin-note">Not in chats with accounts that take no messages, such as @langx.<a class="fnref" href="#fn-see" id="ref-see" aria-label="Footnote 6">6</a></p>
+          </li>
+
+          <li class="step">
+            <div class="step-body">
+              <h3>Tap the help you want</h3>
+              <p>
+                Type a draft and tap the blue Copilot button beside Send for
+                Check my sentence or Say it. Press and hold a message for
+                Explain. With the message box empty, tap Reply ideas or the
+                Explain chip.
+              </p>
+              <div class="slip slip-composer">
+                <p class="sr-only">Sketch of the message box with the Copilot menu open above it.</p>
+                <ul class="cmenu" role="list" aria-label="The Copilot menu">
+                  <li><svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>Check my sentence</li>
+                  <li><svg class="ic" aria-hidden="true"><use href="#i-message" /></svg>Say it in Spanish</li>
+                </ul>
+                <div class="composer" aria-hidden="true">
+                  <span class="composer-draft" lang="es">Me gusta mucho los perros</span>
+                  <span class="composer-copilot"><svg class="ic"><use href="#i-cpu" /></svg></span>
+                  <span class="composer-send"><svg class="ic"><use href="#i-send" /></svg></span>
+                </div>
+              </div>
+            </div>
+            <p class="margin-note">One tap asks one question. Nothing is asked in the background.</p>
+          </li>
+
+          <li class="step">
+            <div class="step-body">
+              <h3>Agree, the first time</h3>
+              <p>
+                The first time, a sheet called “Before you use Copilot” says what
+                is sent and to whom. “Turn on Copilot” agrees and runs the help
+                you tapped. “Not now” records nothing, so it asks again next
+                time. It also asks again after you turn Copilot off, and if what
+                is sent, or who receives it, changes.
+              </p>
+            </div>
+            <p class="margin-note">Nothing is sent before you agree. The sheet is in <a href="#consent-title">§7.1</a>, word for word.</p>
+          </li>
+
+          <li class="step">
+            <div class="step-body">
+              <h3>Read it, then decide</h3>
+              <p>
+                The answer is blue and labelled “Copilot · Beta”. Use it, change
+                it or close it. Only Send sends, and only you press it.
+              </p>
+            </div>
+            <p class="margin-note">AI can be wrong. If an answer is, tap Report.<a class="fnref" href="#fn-wrong" id="ref-wrong" aria-label="Footnote 7">7</a></p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ============ §6 Free and Pro ============ -->
+      <section class="chapter" id="plans" aria-labelledby="plans-title">
+        <header class="chapter-head">
+          <h2 id="plans-title"><span class="sec" aria-hidden="true">§6</span>Free and Pro</h2>
+          <p class="chapter-lede">
+            Copilot is a beta on both plans. Any signed-in account with a
+            verified email can use it, once you have agreed to the consent
+            sheet. The plan changes how many answers you get in a day.
+          </p>
+        </header>
+
+        <div class="ledger-wrap">
+          <table class="plan-table">
+            <caption class="sr-only">Copilot on each plan</caption>
+            <thead>
+              <tr><td></td><th scope="col">Free</th><th scope="col">Pro</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Copilot</th><td>Beta</td><td>Beta</td></tr>
+              <tr><th scope="row">Answers</th><td>A daily allowance</td><td>A larger daily allowance</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="plans-aside">
+          <p class="margin-note">A limit on both plans, and the app shows how many answers are left.<a class="fnref" href="#fn-plans" id="ref-plans" aria-label="Footnote 8">8</a></p>
+        </div>
+
+        <dl class="facts">
+          <div class="fact">
+            <dt>One allowance</dt>
+              <dd>Check my sentence, Say it, Explain and Reply ideas all draw on the same daily allowance.</dd></div>
+          <div class="fact">
+            <dt>What counts</dt>
+              <dd>
+                You only use an answer when Copilot actually writes one. An
+                answer reused because the same question was asked recently costs
+                nothing. If Copilot declines, fails or runs out of time, the
+                answer is given back. A request that stops before Copilot is
+                asked, because it is switched off or you haven’t agreed yet,
+                costs nothing.
+              </dd>
+            <dd class="margin-note">Reply ideas you open again for the same message, while the app is open, cost nothing either.</dd>
+          </div>
+          <div class="fact">
+            <dt>How many are left</dt>
+              <dd>
+                Under every answer a grey line says “<var>n</var> left today”.
+                Once none are left, it says “More at <var>time</var>”: the time
+                the next answer comes back.
+              </dd></div>
+          <div class="fact">
+            <dt>At the limit</dt>
+              <dd>
+                Copilot says “You’ve used today’s Copilot answers. More at
+                <var>time</var>.” It never opens the paywall, and never asks you
+                to upgrade.
+              </dd>
+            <dd class="margin-note">Now and then it may be busy instead: “Copilot is busy. Try again later.”</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============ §7 Privacy ============ -->
+      <section class="chapter" id="privacy" aria-labelledby="privacy-title">
+        <header class="chapter-head">
+          <h2 id="privacy-title"><span class="sec" aria-hidden="true">§7</span>Privacy</h2>
+          <p class="chapter-lede">
+            Nothing is sent until you agree, and after that only when you tap a
+            Copilot button. This is what goes where, in the app’s own words and
+            the privacy policy’s.
+          </p>
+        </header>
+
+        <!-- 7.1 -->
+        <div class="sub">
+          <h3 id="consent-title"><span class="subsec" aria-hidden="true">7.1</span>The sheet you agree to</h3>
+          <figure class="sheet">
+            <div class="sheet-card">
+              <p><span class="pill"><svg class="ic" aria-hidden="true"><use href="#i-cpu" /></svg>Copilot · Beta</span></p>
+              <p class="sheet-title">Before you use Copilot</p>
+              <p>Copilot is an AI helper. It can check a sentence before you send it, help you say something in the language you are learning, explain a message or a correction, and suggest replies.</p>
+              <ul class="sheet-points" role="list">
+                <li><svg class="ic" aria-hidden="true"><use href="#i-send" /></svg><span>When you ask, the text you asked about goes to Anthropic, the company that runs the AI model, with your languages and levels. To explain a message, that is the one message you picked, which the other person wrote. For reply ideas, it includes the last few messages in the chat.</span></li>
+                <li><svg class="ic" aria-hidden="true"><use href="#i-slash" /></svg><span>Your name, email, photos and voice notes are never sent.</span></li>
+                <li><svg class="ic" aria-hidden="true"><use href="#i-alert" /></svg><span>AI can be wrong. Its answers are marked Copilot, and nothing reaches the other person unless you send it yourself.</span></li>
+              </ul>
+              <p class="sheet-link"><a href="https://langx.io/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy policy<span class="sr-only"> (opens in a new tab)</span></a></p>
+              <div class="sheet-btns" aria-hidden="true">
+                <span class="ui-btn ui-btn--blue">Turn on Copilot</span>
+                <span class="ui-btn">Not now</span>
+              </div>
+            </div>
+            <figcaption>The sheet word for word, as the app shows it in English.</figcaption>
+          </figure>
+          <div class="sub-notes">
+            <p class="margin-note">It shows before any text is sent, and on every tap until you agree. “Not now” records nothing.</p>
+            <p class="margin-note">If we change what is sent or who receives it, everyone is asked again.</p>
+          </div>
+        </div>
+
+        <!-- 7.2 -->
+        <div class="sub">
+          <h3 id="sends-title"><span class="subsec" aria-hidden="true">7.2</span>What each help sends</h3>
+          <div class="sub-body">
+            <table class="sends" role="table">
+              <caption class="sr-only">What each Copilot help sends to Anthropic</caption>
+              <tbody role="rowgroup">
+                <tr role="row">
+                  <th scope="row" role="rowheader">Check my sentence</th>
+                  <td role="cell">The sentence you are about to send, your languages and levels, and the language the app is set to.</td>
+                </tr>
+                <tr role="row">
+                  <th scope="row" role="rowheader">Say it</th>
+                  <td role="cell">What you wrote in your own language, the language you want it in, your level in that language, and the language the app is set to. Nothing from the chat, and nothing about your partner.</td>
+                </tr>
+                <tr role="row">
+                  <th scope="row" role="rowheader">Explain<span class="tag">Your partner’s words</span></th>
+                  <td role="cell">The one message you picked, plus your level and the language the app is set to. That is either a message the other person sent you, or a correction: the original sentence, the corrected one and the corrector’s note. Each is cut to 500 characters, and the note to 200.</td>
+                </tr>
+                <tr role="row">
+                  <th scope="row" role="rowheader">Reply ideas<span class="tag">Your partner’s words</span></th>
+                  <td role="cell">Up to the last six text messages and corrections in that chat, from both of you, each cut to 200 characters and marked only as yours or theirs, plus your languages and levels.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="never">
+              <strong>Never sent:</strong> your name, username, email address,
+              user id and age, unless they appear in the text itself. Nor are
+              photos, videos, voice messages, view-once messages, or messages
+              that were deleted or that you hid. The request carries no
+              identifier of yours.
+            </p>
+          </div>
+          <div class="sub-notes">
+            <p class="margin-note">One exception: a correction carries its own copy of the sentence it corrected, so explaining a correction sends that sentence even if its original message was deleted since.</p>
+            <p class="margin-note">Copilot won’t add contact details or links, and won’t help move a chat off LangX. If it ever does, report it.</p>
+          </div>
+        </div>
+
+        <!-- 7.3 -->
+        <div class="sub">
+          <h3 id="who-title"><span class="subsec" aria-hidden="true">7.3</span>Who sees it</h3>
+          <dl class="ledger sub-body">
+            <div><dt>Your partner</dt><dd>None of it. Nothing reaches them unless you send it yourself.</dd></div>
+            <div><dt>Anthropic</dt><dd>The text in the table above, to write the answer for us. Section 2.6 of the privacy policy says what its terms allow it to do with that.</dd></div>
+            <div><dt>The LangX team</dt><dd>Answers you report, with what you chose to send along. People at LangX with access to its systems can also read what LangX keeps (7.4), such as the stored answers, which are linked to no account and deleted after 7 days, and error reports, which carry your user id.</dd></div>
+          </dl>
+          <div class="sub-notes">
+            <p class="margin-note">So Copilot is not “only you”: your partner sees nothing, but Anthropic reads what you asked about, and the LangX team can read what you report and what LangX keeps.<a class="fnref" href="#fn-partner" id="ref-partner" aria-label="Footnote 9">9</a></p>
+          </div>
+        </div>
+
+        <!-- 7.4 -->
+        <div class="sub">
+          <h3 id="kept-title"><span class="subsec" aria-hidden="true">7.4</span>What LangX keeps</h3>
+          <dl class="ledger sub-body">
+            <div><dt>Answers</dt><dd>7 days, so that the same question asked again is not paid for twice. Each is stored under a one-way hash of the question and linked to no account. An answer can repeat the words it was about: a checked sentence comes back corrected. After 7 days it is deleted automatically.</dd></div>
+            <div><dt>Your allowance</dt><dd>The time of each new answer, so that the app can count what is left. Older times are deleted. If you reach the limit, that is noted for a few days. Nothing about what you asked.</dd></div>
+            <div><dt>Server logs</dt><dd>Which help was asked, how it ended and how long it took. Never the text. As with any request, they also see your IP address.</dd></div>
+            <div><dt>Errors</dt><dd>When Copilot fails to answer, the error goes to Sentry, our error tracker, with your user id.</dd></div>
+            <div><dt>Your consent</dt><dd>When you agreed, and which version of the sheet you agreed to.</dd></div>
+            <div><dt>Reports</dt><dd>Kept with your user id, included in Export my data (Settings → Account), and deleted when your account is deleted.</dd></div>
+          </dl>
+        </div>
+
+        <!-- 7.5 -->
+        <div class="sub">
+          <h3 id="off-title"><span class="subsec" aria-hidden="true">7.5</span>Turning it off</h3>
+          <div class="sub-body">
+            <p>
+              Go to <strong>Settings → Privacy → Copilot</strong>. Switch it off and
+              confirm with “Turn off”. That withdraws your consent: “Nothing more
+              of yours goes to the AI provider. Copilot asks again the next time
+              you use it.”
+            </p>
+            <div class="slip slip-setting">
+              <p class="setting-group">Privacy</p>
+              <div class="setting-row">
+                <span class="setting-ic" aria-hidden="true"><svg class="ic"><use href="#i-cpu" /></svg></span>
+                <span class="setting-text"><span class="setting-title">Copilot</span><span class="setting-sub">On. Your text goes to the AI provider only when you tap a Copilot button.</span></span>
+                <span class="toggle is-on" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+          <div class="sub-notes">
+            <p class="margin-note">Can’t see the row? Write to <a href="mailto:hi@langx.io">hi@langx.io</a> to have your consent removed.<a class="fnref" href="#fn-off" id="ref-off" aria-label="Footnote 10">10</a></p>
+          </div>
+        </div>
+
+        <!-- 7.6 -->
+        <div class="sub">
+          <h3 id="report-title"><span class="subsec" aria-hidden="true">7.6</span>Reporting an answer</h3>
+          <div class="sub-body">
+            <p>
+              Every answer has <span class="ui-inline"><svg class="ic" aria-hidden="true"><use href="#i-flag" /></svg>Report</span>
+              in its corner. A report sends the answer and which help wrote it
+              to the LangX team: “Nothing is sent to the other person.” For Check
+              my sentence and Say it, “Also send what you wrote” adds your
+              draft; it is off unless you switch it on. Nothing else from your
+              chat is sent.
+            </p>
+          </div>
+          <div class="sub-notes">
+            <p class="margin-note">A report goes to us only: not to Anthropic, and not to any public tracker.</p>
+          </div>
+        </div>
+
+        <p class="policy-link">
+          The full detail is in section 2.6 of the
+          <a href="https://langx.io/privacy-policy" target="_blank" rel="noopener noreferrer">LangX privacy policy<span class="sr-only"> (opens in a new tab)</span></a>.
+        </p>
+      </section>
+
+      <!-- ============ §8 Status: errata ============ -->
+      <section class="chapter" id="status" aria-labelledby="status-title">
+        <header class="chapter-head">
+          <h2 id="status-title"><span class="sec" aria-hidden="true">§8</span>What’s live, and what isn’t</h2>
+          <p class="chapter-lede">Everything that has been called Copilot, with its real status.</p>
+        </header>
+
+        <div class="contents">
+          <ul class="errata" role="list">
+            <li class="entry is-live">
+              <p class="entry-line">
+                <span class="entry-title">Copilot in LangX chats</span>
+                <span class="leader" aria-hidden="true"></span>
+                <span class="sr-only">, status: </span>
+                <span class="status"><span class="dot dot-live" aria-hidden="true"></span>Beta</span>
+              </p>
+              <p class="entry-desc">
+                Check my sentence, Say it, Explain and Reply ideas, in the LangX
+                app now, on Free and Pro, for every account with a verified
+                email. Every answer is labelled “Copilot · Beta”. It is a beta,
+                and we may switch it off for everyone at any time.
+              </p>
+            </li>
+            <li class="entry is-closed">
+              <p class="entry-line">
+                <span class="entry-title">The @copilot account</span>
+                <span class="leader" aria-hidden="true"></span>
+                <span class="sr-only">, status: </span>
+                <span class="status"><span class="dot dot-closed" aria-hidden="true"></span>Closed</span>
+              </p>
+              <p class="entry-desc">
+                A profile in the app that does not take messages. You can’t chat
+                with Copilot; it works inside your chats with people.<a class="fnref" href="#fn-account" id="ref-account" aria-label="Footnote 11">11</a>
+              </p>
+            </li>
+            <li class="entry is-hist">
+              <p class="entry-line">
+                <span class="entry-title">Where Copilot started</span>
+                <span class="leader" aria-hidden="true"></span>
+                <span class="sr-only">, status: </span>
+                <span class="status"><span class="dot dot-hist" aria-hidden="true"></span>Historical</span>
+              </p>
+              <p class="entry-desc">
+                Copilot started as a Discord bot and as a switch in the first
+                LangX app; the bot is paused.
+              </p>
+            </li>
+          </ul>
+        </div>
+        <p class="margin-note margin-note--beside">
+          Next to Copilot in a chat, and not Copilot: Correct, where a person
+          rewrites your sentence in green; Translate, a machine translation with
+          its own allowance; Echo, review cards made from real messages; and the
+          topic starters above a quiet chat, which come from a fixed list.
+        </p>
+      </section>
+
+      <!-- ============ §9 Questions, as footnotes ============ -->
+      <section class="chapter" id="faq" aria-labelledby="faq-title">
+        <header class="chapter-head">
+          <h2 id="faq-title"><span class="sec" aria-hidden="true">§9</span>Questions</h2>
+          <p class="chapter-lede">Set as footnotes, because that is where the small print belongs. None of it is hidden.</p>
+        </header>
+
+        <ol class="footnotes" role="list">
+          <li id="fn-person">
+            <h3>Is Copilot a person, a tutor or a chatbot?</h3>
+            <p>None of those. Copilot is an AI writing aid inside a chat with a real person. It does not talk with you: you tap one of its four helps, and it answers that one question. AI can be wrong, so treat every answer as a suggestion. <a class="fnback" href="#ref-person" aria-label="Back to the introduction">↑</a></p>
+          </li>
+          <li id="fn-send">
+            <h3>Does Copilot ever send a message for me?</h3>
+            <p>No. Nothing reaches the other person unless you send it yourself. “Use this”, a way to say it and a reply idea only fill your message box. <a class="fnback" href="#ref-send" aria-label="Back to Check my sentence">↑</a></p>
+          </li>
+          <li id="fn-long">
+            <h3>How long can my message be?</h3>
+            <p>Check my sentence takes a chat-length sentence, and Say it a chat line, not a paragraph. When a draft is too long for a help, that help is left out of the Copilot menu. <a class="fnback" href="#ref-long" aria-label="Back to Say it">↑</a></p>
+          </li>
+          <li id="fn-languages">
+            <h3>Which languages does it work in?</h3>
+            <p>Copilot explains in your app language: English, Turkish, Spanish, Russian, Arabic, French, German or Brazilian Portuguese. Check my sentence checks the language you wrote in, Say it writes in the language you are learning, and reply ideas come in the language of the chat. Its answers can be wrong in any language. <a class="fnback" href="#ref-languages" aria-label="Back to Say it">↑</a></p>
+          </li>
+          <li id="fn-sent">
+            <h3>What is sent to the AI, and to whom?</h3>
+            <p>Nothing until you agree, and then only when you tap a Copilot button. The text you asked about goes to Anthropic, the company that runs the AI model, with your languages and levels. For Explain that can be a message your partner wrote, and for reply ideas the last few messages in the chat. Your name, email, photos and voice notes are never sent. Section 2.6 of the <a href="https://langx.io/privacy-policy" target="_blank" rel="noopener noreferrer">LangX privacy policy<span class="sr-only"> (opens in a new tab)</span></a> has the details. <a class="fnback" href="#ref-sent" aria-label="Back to Reply ideas">↑</a></p>
+          </li>
+          <li id="fn-see">
+            <h3>Why don’t I see Copilot?</h3>
+            <p>It appears inside a conversation you already have, not on the screen that starts a new one, and not in a chat with an account that takes no messages, such as @langx. The Copilot button shows once you have typed something. Guest accounts and accounts with an unverified email can’t use it. It is a beta, and we may switch it off for everyone at any time. <a class="fnback" href="#ref-see" aria-label="Back to How to use it, step 1">↑</a></p>
+          </li>
+          <li id="fn-wrong">
+            <h3>What if an answer is wrong?</h3>
+            <p>Keep your own words, and tap Report in the corner of the answer. The LangX team sees the answer and which help wrote it. For Check my sentence and Say it, you can choose to send what you wrote too. <a class="fnback" href="#ref-wrong" aria-label="Back to How to use it, step 4">↑</a></p>
+          </li>
+          <li id="fn-plans">
+            <h3>Do I need Pro?</h3>
+            <p>No. Any signed-in account with a verified email can use Copilot, on Free and on Pro. Both plans have a daily allowance of answers, and Pro’s is larger. The app shows how many are left. On both plans, Copilot is a beta. <a class="fnback" href="#ref-plans" aria-label="Back to Free and Pro">↑</a></p>
+          </li>
+          <li id="fn-partner">
+            <h3>Can my partner see that I used Copilot?</h3>
+            <p>No. Your partner sees none of your Copilot answers. What you send is your own message, whether or not Copilot helped with it. <a class="fnback" href="#ref-partner" aria-label="Back to Who sees it">↑</a></p>
+          </li>
+          <li id="fn-off">
+            <h3>How do I turn Copilot off?</h3>
+            <p>Settings → Privacy → Copilot. Turning it off withdraws your consent: nothing more of yours goes to the AI provider, and Copilot asks again the next time you use it. If you can’t see that row, write to <a href="mailto:hi@langx.io">hi@langx.io</a>. <a class="fnback" href="#ref-off" aria-label="Back to Turning it off">↑</a></p>
+          </li>
+          <li id="fn-account">
+            <h3>Can I chat with @copilot?</h3>
+            <p>No. The @copilot account is closed and does not take messages. Copilot works inside your chats with people, not in a chat of its own. <a class="fnback" href="#ref-account" aria-label="Back to the status board">↑</a></p>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <div class="shell colophon-inner">
+        <div class="colophon-brand">
+          <a class="brand-mark" href="https://langx.io" target="_blank" rel="noopener noreferrer">
+            <img src="images/mark.svg" width="36" height="36" alt="LangX" />
+          <span class="sr-only"> (opens in a new tab)</span></a>
+          <p>
+            Copilot is part of <a href="https://langx.io" target="_blank" rel="noopener noreferrer">LangX<span class="sr-only"> (opens in a new tab)</span></a>,
+            the language exchange app for practising with real people.
+          </p>
+        </div>
+
+        <!-- docs.langx.io is left out until its Copilot page matches this one
+             (it still says "part of Pro" and "may not be on for yours yet"). -->
+        <nav class="colophon-links" aria-label="LangX links">
+          <ul role="list">
+            <li><a href="https://langx.io" target="_blank" rel="noopener noreferrer">langx.io<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://token.langx.io" target="_blank" rel="noopener noreferrer">token.langx.io<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://langx.io/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy policy<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://discord.langx.io" target="_blank" rel="noopener noreferrer">Discord<span class="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://github.com/langx/langx" target="_blank" rel="noopener noreferrer">GitHub: langx/langx<span class="sr-only"> (opens in a new tab)</span></a></li>
+          </ul>
+        </nav>
+
+        <ul class="socials" role="list" aria-label="LangX elsewhere">
+          <li><a href="https://discord.langx.io" target="_blank" rel="noopener noreferrer"><img src="images/socials/discord.svg" width="22" height="22" alt="Discord" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://t.me/languageXapp" target="_blank" rel="noopener noreferrer"><img src="images/socials/telegram.svg" width="22" height="22" alt="Telegram" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://x.com/langx_io" target="_blank" rel="noopener noreferrer"><img src="images/socials/x.svg" width="22" height="22" alt="X" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://tiktok.com/@langxapp" target="_blank" rel="noopener noreferrer"><img src="images/socials/tiktok.svg" width="22" height="22" alt="TikTok" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://www.facebook.com/langxapp" target="_blank" rel="noopener noreferrer"><img src="images/socials/facebook.svg" width="22" height="22" alt="Facebook" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://www.youtube.com/@langxapp" target="_blank" rel="noopener noreferrer"><img src="images/socials/youtube.svg" width="22" height="22" alt="YouTube" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://bsky.app/profile/langx.io" target="_blank" rel="noopener noreferrer"><img src="images/socials/bluesky.svg" width="22" height="22" alt="Bluesky" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href="https://github.com/langx" target="_blank" rel="noopener noreferrer"><img src="images/socials/github.svg" width="22" height="22" alt="GitHub" /><span class="sr-only"> (opens in a new tab)</span></a></li>
+        </ul>
+
+        <div class="colophon-small">
+          <p>Copilot is an AI and can be wrong. Its answers are labelled “Copilot · Beta”.</p>
+          <p>© 2026 LangX. Set in Newsreader and Courier Prime.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="main.js" defer></script>
+  </body>
+</html>

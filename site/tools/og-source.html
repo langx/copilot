@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Social preview source</title>
+    <!--
+      The source of images/site-preview.png (1200 × 630), in the page's own
+      "Margin notes" style. Render it from the site folder with:
+
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
+          --hide-scrollbars --force-device-scale-factor=2 --virtual-time-budget=8000 \
+          --window-size=1200,630 --screenshot=og@2x.png tools/og-source.html \
+          && magick og@2x.png -resize 1200x630 -strip images/site-preview.png
+
+      The example is an illustration, the same one as the hero: a person's
+      correction in green, Copilot's explanation of it in blue.
+
+      Its style and script are in og.css and og.js beside it, so this page
+      runs under the site's own Content-Security-Policy like every other one
+      (_headers only keeps it out of search results).
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap"
+    />
+    <link rel="stylesheet" href="og.css" />
+  </head>
+  <body>
+    <div class="top">
+      <p class="brand">
+        <img src="../images/mark.svg" alt="" />
+        <b>LangX</b><span class="slash">/</span><i>Copilot</i>
+      </p>
+      <p class="url mono">copilot.langx.io</p>
+    </div>
+
+    <h1>AI help inside your LangX chats.<br /><span class="hl">It never sends a word for you.</span></h1>
+
+    <div class="proof">
+      <p class="label mono">You wrote</p>
+      <p class="specimen" lang="es">
+        <span class="w"><span class="g">Ayer</span></span>
+        <span class="w w-del"><span class="g">yo</span><svg class="mk mk-strike" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M2 12.6C30 10 66 11.4 98 7" /></svg><svg class="mk mk-dele" viewBox="0 0 20 34"><path d="M1 23.6C5 23 10 20 13.5 15C16.5 10.5 16.5 3 13 3.3C9.5 3.6 9.5 10 12 15C13.8 18.6 15.5 21 17.5 23.5" /></svg></span>
+        <span class="w w-del" id="anchor"><span class="g">voy</span><svg class="mk mk-strike" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M2 13.2C26 9.5 62 11.6 98 6.4" /></svg><span class="ins">fui</span></span>
+        <span class="w"><span class="g">al</span></span>
+        <span class="w"><span class="g">cine.</span></span>
+      </p>
+      <p class="label label--fix mono">Lucía corrected it</p>
+      <p class="corrected" lang="es">Ayer fui al cine.</p>
+    </div>
+
+    <div class="note" id="note">
+      <p class="note-head">
+        <span class="pill mono" id="note-label"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" /></svg>Copilot · Beta</span>
+        <span class="note-title">Explained</span>
+      </p>
+      <p class="note-text">
+        “Ayer” (yesterday) puts this in the past, so “voy” (I&nbsp;go) becomes “fui”
+        (I&nbsp;went). “Yo” can go, because “fui” already says who.
+      </p>
+    </div>
+
+    <div class="foot">
+      <p><span class="dot"></span><b>In the LangX app now</b>, as a beta, on Free and Pro</p>
+      <p class="mono">Illustration. AI can be wrong.</p>
+    </div>
+
+    <svg class="connector" id="connector" aria-hidden="true"></svg>
+
+    <script src="og.js"></script>
+  </body>
+</html>

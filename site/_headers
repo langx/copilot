@@ -1,0 +1,44 @@
+# Cloudflare Pages response headers.
+#
+# Everything in this folder is deployed (there is no build step to leave
+# things out), so the files that are not pages for people are told to stay
+# out of search results instead.
+#
+# The Content-Security-Policy allows exactly what the page uses: its own
+# files, Google Fonts (the stylesheet and the font files), data: images (the
+# paper grain in style.css) and the one inline script in the <head> of
+# index.html, by its hash. If you change that script by one character,
+# recompute the hash or the browser will refuse it and the page falls back
+# to its no-JS layout:
+#   python3 -c "import re,hashlib,base64;s=open('index.html').read();print(base64.b64encode(hashlib.sha256(re.search(r'<script>(.*?)</script>',s,re.S).group(1).encode()).digest()).decode())"
+# style-src-attr allows the style="--d: …" attributes that time the marks.
+# There are no analytics, no cookies and no third-party scripts.
+#
+# The same policy covers tools/og-source.html (the source of the social
+# preview image): its style and script are files beside it, not inline.
+#
+# Strict-Transport-Security: Pages only serves HTTPS; this tells browsers
+# never to try plain HTTP for copilot.langx.io. If HSTS is also switched on
+# for the langx.io zone in Cloudflare, keep the two settings the same.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-BShMw3eEEVAGG5poRjfPJOMTdRCtyEbfIrw0+Dv6wRU='; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+/404
+  X-Robots-Tag: noindex
+/404.html
+  X-Robots-Tag: noindex
+/tools/*
+  X-Robots-Tag: noindex
+
+# The pages.dev addresses, production and preview, stay out of search
+# results; only copilot.langx.io is indexed.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

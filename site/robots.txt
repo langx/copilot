@@ -1,0 +1,5 @@
+# copilot.langx.io: one page about LangX Copilot.
+User-agent: *
+Allow: /
+
+Sitemap: https://copilot.langx.io/sitemap.xml
