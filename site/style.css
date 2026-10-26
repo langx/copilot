@@ -562,8 +562,8 @@ button {
   color: var(--ink);
 }
 
-/* Status glyphs: filled for a beta you can use, an open ring for closed,
-   a broken ring for history. */
+/* Status glyphs: filled for a beta you can use, an open ring for one that
+   is not open yet, a broken ring for history. */
 .dot {
   flex: none;
   display: inline-block;
@@ -2019,12 +2019,12 @@ button {
 }
 
 .is-hist .entry-title,
-.is-closed .entry-title {
+.is-soon .entry-title {
   color: var(--ink-2);
 }
 
 .is-hist .status,
-.is-closed .status {
+.is-soon .status {
   color: var(--muted);
 }
 
